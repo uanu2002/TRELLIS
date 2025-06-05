@@ -54,20 +54,20 @@ if __name__ == '__main__':
     # merge downloaded
     df_files = [f for f in os.listdir(opt.output_dir) if f.startswith('downloaded_') and f.endswith('.csv')]
     df_parts = []
-    for f in df_files:
-        try:
-            df_parts.append(pd.read_csv(os.path.join(opt.output_dir, f)))
-        except:
-            pass
-    if len(df_parts) > 0:
-        df = pd.concat(df_parts)
-        df.set_index('sha256', inplace=True)
-        if 'local_path' in metadata.columns:
-            metadata.update(df, overwrite=True)
-        else:
-            metadata = metadata.join(df, on='sha256', how='left')
-        for f in df_files:
-            shutil.move(os.path.join(opt.output_dir, f), os.path.join(opt.output_dir, 'merged_records', f'{timestamp}_{f}'))
+    # for f in df_files:
+    #     try:
+    #         df_parts.append(pd.read_csv(os.path.join(opt.output_dir, f)))
+    #     except:
+    #         pass
+    # if len(df_parts) > 0:
+    #     df = pd.concat(df_parts)
+    #     df.set_index('sha256', inplace=True)
+    #     if 'local_path' in metadata.columns:
+    #         metadata.update(df, overwrite=True)
+    #     else:
+    #         metadata = metadata.join(df, on='sha256', how='left')
+    #     for f in df_files:
+    #         shutil.move(os.path.join(opt.output_dir, f), os.path.join(opt.output_dir, 'merged_records', f'{timestamp}_{f}'))
             
     # detect models
     image_models = []

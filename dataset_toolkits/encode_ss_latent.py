@@ -76,7 +76,7 @@ if __name__ == '__main__':
     else:
         if opt.filter_low_aesthetic_score is not None:
             metadata = metadata[metadata['aesthetic_score'] >= opt.filter_low_aesthetic_score]
-        metadata = metadata[metadata['voxelized'] == True]
+        # metadata = metadata[metadata['voxelized'] == True]
         if f'ss_latent_{latent_name}' in metadata.columns:
             metadata = metadata[metadata[f'ss_latent_{latent_name}'] == False]
 

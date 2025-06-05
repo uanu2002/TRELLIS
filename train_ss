@@ -1,0 +1,1145 @@
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+
+
+Config:
+================================================================================
+{
+    "config": "configs/generation/ss_flow_txt_dit_B_16l8_fp16.json",
+    "output_dir": "outputs/ss_flow_txt_dit_B_16l8_fp16_1node_from_scratch",
+    "load_dir": "outputs/ss_flow_txt_dit_B_16l8_fp16_1node_from_scratch",
+    "ckpt": "latest",
+    "data_dir": "datasets/T8",
+    "auto_retry": 3,
+    "tryrun": false,
+    "profile": false,
+    "num_nodes": 1,
+    "node_rank": 0,
+    "num_gpus": 4,
+    "master_addr": "localhost",
+    "master_port": "12345",
+    "models": {
+        "denoiser": {
+            "name": "SparseStructureFlowModel",
+            "args": {
+                "resolution": 16,
+                "in_channels": 8,
+                "out_channels": 8,
+                "model_channels": 768,
+                "cond_channels": 768,
+                "num_blocks": 12,
+                "num_heads": 12,
+                "mlp_ratio": 4,
+                "patch_size": 1,
+                "pe_mode": "ape",
+                "qk_rms_norm": true,
+                "use_fp16": true
+            }
+        }
+    },
+    "dataset": {
+        "name": "TextConditionedSparseStructureLatent",
+        "args": {
+            "latent_model": "ss_enc_conv3d_16l8_fp16",
+            "min_aesthetic_score": 0,
+            "pretrained_ss_dec": "microsoft/TRELLIS-image-large/ckpts/ss_dec_conv3d_16l8_fp16"
+        }
+    },
+    "trainer": {
+        "name": "TextConditionedFlowMatchingCFGTrainer",
+        "args": {
+            "max_steps": 1000000,
+            "batch_size_per_gpu": 16,
+            "batch_split": 1,
+            "optimizer": {
+                "name": "AdamW",
+                "args": {
+                    "lr": 0.0001,
+                    "weight_decay": 0.0
+                }
+            },
+            "ema_rate": [
+                0.9999
+            ],
+            "fp16_mode": "inflat_all",
+            "fp16_scale_growth": 0.001,
+            "grad_clip": {
+                "name": "AdaptiveGradClipper",
+                "args": {
+                    "max_norm": 1.0,
+                    "clip_percentile": 95
+                }
+            },
+            "i_log": 500,
+            "i_sample": 2000,
+            "i_save": 2000,
+            "p_uncond": 0.1,
+            "t_schedule": {
+                "name": "logitNormal",
+                "args": {
+                    "mean": 1.0,
+                    "std": 1.0
+                }
+            },
+            "sigma_min": 1e-05,
+            "text_cond_model": "openai/clip-vit-large-patch14"
+        }
+    }
+}
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+
+
+Backbone: denoiser
+Parameters:
+================================================================================================================================
+Name                                                                    Shape                           Type            Grad
+t_embedder.mlp.0.weight                                                 torch.Size([768, 256])          torch.float32   True
+t_embedder.mlp.0.bias                                                   torch.Size([768])               torch.float32   True
+t_embedder.mlp.2.weight                                                 torch.Size([768, 768])          torch.float32   True
+t_embedder.mlp.2.bias                                                   torch.Size([768])               torch.float32   True
+input_layer.weight                                                      torch.Size([768, 8])            torch.float32   True
+input_layer.bias                                                        torch.Size([768])               torch.float32   True
+blocks.0.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.0.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.0.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.0.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.0.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.0.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.0.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.0.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.0.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.0.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.0.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.0.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.0.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.0.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.0.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.0.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.0.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.0.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.0.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.0.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.1.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.1.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.1.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.1.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.1.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.1.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.1.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.1.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.1.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.1.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.1.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.1.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.1.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.1.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.1.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.1.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.1.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.1.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.1.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.1.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.2.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.2.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.2.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.2.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.2.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.2.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.2.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.2.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.2.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.2.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.2.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.2.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.2.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.2.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.2.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.2.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.2.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.2.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.2.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.2.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.3.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.3.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.3.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.3.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.3.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.3.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.3.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.3.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.3.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.3.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.3.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.3.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.3.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.3.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.3.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.3.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.3.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.3.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.3.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.3.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.4.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.4.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.4.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.4.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.4.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.4.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.4.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.4.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.4.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.4.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.4.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.4.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.4.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.4.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.4.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.4.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.4.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.4.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.4.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.4.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.5.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.5.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.5.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.5.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.5.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.5.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.5.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.5.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.5.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.5.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.5.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.5.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.5.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.5.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.5.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.5.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.5.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.5.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.5.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.5.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.6.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.6.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.6.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.6.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.6.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.6.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.6.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.6.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.6.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.6.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.6.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.6.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.6.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.6.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.6.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.6.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.6.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.6.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.6.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.6.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.7.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.7.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.7.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.7.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.7.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.7.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.7.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.7.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.7.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.7.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.7.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.7.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.7.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.7.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.7.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.7.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.7.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.7.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.7.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.7.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.8.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.8.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.8.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.8.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.8.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.8.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.8.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.8.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.8.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.8.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.8.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.8.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.8.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.8.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.8.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.8.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.8.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.8.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.8.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.8.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.9.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.9.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.9.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.9.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.9.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.9.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.9.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.9.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.9.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.9.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.9.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.9.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.9.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.9.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.9.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.9.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.9.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.9.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.9.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.9.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.10.norm2.weight                                                  torch.Size([768])               torch.float32   True
+blocks.10.norm2.bias                                                    torch.Size([768])               torch.float32   True
+blocks.10.self_attn.to_qkv.weight                                       torch.Size([2304, 768])         torch.float16   True
+blocks.10.self_attn.to_qkv.bias                                         torch.Size([2304])              torch.float16   True
+blocks.10.self_attn.q_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.10.self_attn.k_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.10.self_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.10.self_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.10.cross_attn.to_q.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.10.cross_attn.to_q.bias                                          torch.Size([768])               torch.float16   True
+blocks.10.cross_attn.to_kv.weight                                       torch.Size([1536, 768])         torch.float16   True
+blocks.10.cross_attn.to_kv.bias                                         torch.Size([1536])              torch.float16   True
+blocks.10.cross_attn.to_out.weight                                      torch.Size([768, 768])          torch.float16   True
+blocks.10.cross_attn.to_out.bias                                        torch.Size([768])               torch.float16   True
+blocks.10.mlp.mlp.0.weight                                              torch.Size([3072, 768])         torch.float16   True
+blocks.10.mlp.mlp.0.bias                                                torch.Size([3072])              torch.float16   True
+blocks.10.mlp.mlp.2.weight                                              torch.Size([768, 3072])         torch.float16   True
+blocks.10.mlp.mlp.2.bias                                                torch.Size([768])               torch.float16   True
+blocks.10.adaLN_modulation.1.weight                                     torch.Size([4608, 768])         torch.float16   True
+blocks.10.adaLN_modulation.1.bias                                       torch.Size([4608])              torch.float16   True
+blocks.11.norm2.weight                                                  torch.Size([768])               torch.float32   True
+blocks.11.norm2.bias                                                    torch.Size([768])               torch.float32   True
+blocks.11.self_attn.to_qkv.weight                                       torch.Size([2304, 768])         torch.float16   True
+blocks.11.self_attn.to_qkv.bias                                         torch.Size([2304])              torch.float16   True
+blocks.11.self_attn.q_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.11.self_attn.k_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.11.self_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.11.self_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.11.cross_attn.to_q.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.11.cross_attn.to_q.bias                                          torch.Size([768])               torch.float16   True
+blocks.11.cross_attn.to_kv.weight                                       torch.Size([1536, 768])         torch.float16   True
+blocks.11.cross_attn.to_kv.bias                                         torch.Size([1536])              torch.float16   True
+blocks.11.cross_attn.to_out.weight                                      torch.Size([768, 768])          torch.float16   True
+blocks.11.cross_attn.to_out.bias                                        torch.Size([768])               torch.float16   True
+blocks.11.mlp.mlp.0.weight                                              torch.Size([3072, 768])         torch.float16   True
+blocks.11.mlp.mlp.0.bias                                                torch.Size([3072])              torch.float16   True
+blocks.11.mlp.mlp.2.weight                                              torch.Size([768, 3072])         torch.float16   True
+blocks.11.mlp.mlp.2.bias                                                torch.Size([768])               torch.float16   True
+blocks.11.adaLN_modulation.1.weight                                     torch.Size([4608, 768])         torch.float16   True
+blocks.11.adaLN_modulation.1.bias                                       torch.Size([4608])              torch.float16   True
+out_layer.weight                                                        torch.Size([8, 768])            torch.float32   True
+out_layer.bias                                                          torch.Size([8])                 torch.float32   True
+
+Number of parameters: 156726536
+Number of trainable parameters: 156726536
+
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+
+Trainer initialized.
+TextConditionedFlowMatchingCFGTrainer
+  - Models:
+    - denoiser: SparseStructureFlowModel
+  - Dataset: TextConditionedSparseStructureLatent
+    - Total instances: 200
+    - Sources:
+      - T8:
+        - Total: 200
+        - With sparse structure latents: 200
+        - Aesthetic score >= 0: 200
+        - With captions: 200
+  - Dataloader:
+    - Sampler: ResumableSampler
+    - Num workers: 32
+  - Number of steps: 1000000
+  - Number of GPUs: 4
+  - Batch size: 64
+  - Batch size per GPU: 16
+  - Batch split: 1
+  - Optimizer: AdamW
+  - Learning rate: 0.0001
+  - Gradient clip: AdaptiveGradClipper(max_norm=1.0, clip_percentile=95)
+  - EMA rate: [0.9999]
+  - FP16 mode: inflat_all
+
+Starting training...
+
+Sampling 64 images... Done.
+Step: 1000/1000000 (0.10%) | Elapsed: 0.28 h           | Speed: 3536.11 steps/h    | ETA: 282.51 h            
+Step: 2000/1000000 (0.20%) | Elapsed: 0.49 h           | Speed: 4891.00 steps/h    | ETA: 204.05 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 2000... Done.
+Step: 3000/1000000 (0.30%) | Elapsed: 0.69 h           | Speed: 4888.43 steps/h    | ETA: 203.95 h            
+Step: 4000/1000000 (0.40%) | Elapsed: 0.90 h           | Speed: 4882.16 steps/h    | ETA: 204.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 4000... Done.
+Step: 5000/1000000 (0.50%) | Elapsed: 1.10 h           | Speed: 4882.11 steps/h    | ETA: 203.81 h            
+Step: 6000/1000000 (0.60%) | Elapsed: 1.31 h           | Speed: 4878.47 steps/h    | ETA: 203.75 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 6000... Done.
+Step: 7000/1000000 (0.70%) | Elapsed: 1.51 h           | Speed: 4879.32 steps/h    | ETA: 203.51 h            
+Step: 8000/1000000 (0.80%) | Elapsed: 1.72 h           | Speed: 4880.20 steps/h    | ETA: 203.27 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 8000... Done.
+Step: 9000/1000000 (0.90%) | Elapsed: 1.92 h           | Speed: 4877.31 steps/h    | ETA: 203.19 h            
+Step: 10000/1000000 (1.00%) | Elapsed: 2.13 h           | Speed: 4882.65 steps/h    | ETA: 202.76 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 10000... Done.
+Step: 11000/1000000 (1.10%) | Elapsed: 2.33 h           | Speed: 4893.07 steps/h    | ETA: 202.12 h            
+Step: 12000/1000000 (1.20%) | Elapsed: 2.53 h           | Speed: 4892.24 steps/h    | ETA: 201.95 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 12000... Done.
+Step: 13000/1000000 (1.30%) | Elapsed: 2.74 h           | Speed: 4890.12 steps/h    | ETA: 201.84 h            
+Step: 14000/1000000 (1.40%) | Elapsed: 2.94 h           | Speed: 4890.40 steps/h    | ETA: 201.62 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 14000... Done.
+Step: 15000/1000000 (1.50%) | Elapsed: 3.15 h           | Speed: 4893.49 steps/h    | ETA: 201.29 h            
+Step: 16000/1000000 (1.60%) | Elapsed: 3.35 h           | Speed: 4886.27 steps/h    | ETA: 201.38 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 16000... Done.
+Step: 17000/1000000 (1.70%) | Elapsed: 3.56 h           | Speed: 4893.54 steps/h    | ETA: 200.88 h            
+Step: 18000/1000000 (1.80%) | Elapsed: 3.76 h           | Speed: 4894.46 steps/h    | ETA: 200.64 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 18000... Done.
+Step: 19000/1000000 (1.90%) | Elapsed: 3.97 h           | Speed: 4892.00 steps/h    | ETA: 200.53 h            
+Step: 20000/1000000 (2.00%) | Elapsed: 4.17 h           | Speed: 4893.40 steps/h    | ETA: 200.27 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 20000... Done.
+Step: 21000/1000000 (2.10%) | Elapsed: 4.37 h           | Speed: 4894.74 steps/h    | ETA: 200.01 h            
+Step: 22000/1000000 (2.20%) | Elapsed: 4.58 h           | Speed: 4894.14 steps/h    | ETA: 199.83 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 22000... Done.
+Step: 23000/1000000 (2.30%) | Elapsed: 4.78 h           | Speed: 4892.71 steps/h    | ETA: 199.68 h            
+Step: 24000/1000000 (2.40%) | Elapsed: 4.99 h           | Speed: 4895.08 steps/h    | ETA: 199.38 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 24000... Done.
+Step: 25000/1000000 (2.50%) | Elapsed: 5.19 h           | Speed: 4895.51 steps/h    | ETA: 199.16 h            
+Step: 26000/1000000 (2.60%) | Elapsed: 5.40 h           | Speed: 4894.02 steps/h    | ETA: 199.02 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 26000... Done.
+Step: 27000/1000000 (2.70%) | Elapsed: 5.60 h           | Speed: 4890.40 steps/h    | ETA: 198.96 h            
+Step: 28000/1000000 (2.80%) | Elapsed: 5.81 h           | Speed: 4892.68 steps/h    | ETA: 198.66 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 28000... Done.
+Step: 29000/1000000 (2.90%) | Elapsed: 6.01 h           | Speed: 4890.52 steps/h    | ETA: 198.55 h            
+Step: 30000/1000000 (3.00%) | Elapsed: 6.21 h           | Speed: 4885.72 steps/h    | ETA: 198.54 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 30000... Done.
+Step: 31000/1000000 (3.10%) | Elapsed: 6.42 h           | Speed: 4888.21 steps/h    | ETA: 198.23 h            
+Step: 32000/1000000 (3.20%) | Elapsed: 6.62 h           | Speed: 4893.05 steps/h    | ETA: 197.83 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 32000... Done.
+Step: 33000/1000000 (3.30%) | Elapsed: 6.83 h           | Speed: 4887.51 steps/h    | ETA: 197.85 h            
+Step: 34000/1000000 (3.40%) | Elapsed: 7.03 h           | Speed: 4886.70 steps/h    | ETA: 197.68 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 34000... Done.
+Step: 35000/1000000 (3.50%) | Elapsed: 7.24 h           | Speed: 4887.93 steps/h    | ETA: 197.43 h            
+Step: 36000/1000000 (3.60%) | Elapsed: 7.44 h           | Speed: 4883.60 steps/h    | ETA: 197.40 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 36000... Done.
+Step: 37000/1000000 (3.70%) | Elapsed: 7.65 h           | Speed: 4885.39 steps/h    | ETA: 197.12 h            
+Step: 38000/1000000 (3.80%) | Elapsed: 7.85 h           | Speed: 4881.38 steps/h    | ETA: 197.08 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 38000... Done.
+Step: 39000/1000000 (3.90%) | Elapsed: 8.06 h           | Speed: 4884.69 steps/h    | ETA: 196.74 h            
+Step: 40000/1000000 (4.00%) | Elapsed: 8.26 h           | Speed: 4880.43 steps/h    | ETA: 196.70 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 40000... Done.
+Step: 41000/1000000 (4.10%) | Elapsed: 8.47 h           | Speed: 4882.10 steps/h    | ETA: 196.43 h            
+Step: 42000/1000000 (4.20%) | Elapsed: 8.67 h           | Speed: 4885.17 steps/h    | ETA: 196.10 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 42000... Done.
+Step: 43000/1000000 (4.30%) | Elapsed: 8.88 h           | Speed: 4883.77 steps/h    | ETA: 195.96 h            
+Step: 44000/1000000 (4.40%) | Elapsed: 9.08 h           | Speed: 4883.73 steps/h    | ETA: 195.75 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 44000... Done.
+Step: 45000/1000000 (4.50%) | Elapsed: 9.28 h           | Speed: 4886.12 steps/h    | ETA: 195.45 h            
+Step: 46000/1000000 (4.60%) | Elapsed: 9.49 h           | Speed: 4883.40 steps/h    | ETA: 195.36 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 46000... Done.
+Step: 47000/1000000 (4.70%) | Elapsed: 9.69 h           | Speed: 4881.61 steps/h    | ETA: 195.22 h            
+Step: 48000/1000000 (4.80%) | Elapsed: 9.90 h           | Speed: 4885.05 steps/h    | ETA: 194.88 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 48000... Done.
+Step: 49000/1000000 (4.90%) | Elapsed: 10.10 h          | Speed: 4884.09 steps/h    | ETA: 194.71 h            
+Step: 50000/1000000 (5.00%) | Elapsed: 10.31 h          | Speed: 4884.12 steps/h    | ETA: 194.51 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 50000... Done.
+Step: 51000/1000000 (5.10%) | Elapsed: 10.51 h          | Speed: 4883.86 steps/h    | ETA: 194.31 h            
+Step: 52000/1000000 (5.20%) | Elapsed: 10.72 h          | Speed: 4882.97 steps/h    | ETA: 194.14 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 52000... Done.
+Step: 53000/1000000 (5.30%) | Elapsed: 10.92 h          | Speed: 4886.58 steps/h    | ETA: 193.80 h            
+Step: 54000/1000000 (5.40%) | Elapsed: 11.13 h          | Speed: 4887.53 steps/h    | ETA: 193.55 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 54000... Done.
+Step: 55000/1000000 (5.50%) | Elapsed: 11.33 h          | Speed: 4884.63 steps/h    | ETA: 193.46 h            
+Step: 56000/1000000 (5.60%) | Elapsed: 11.54 h          | Speed: 4886.78 steps/h    | ETA: 193.17 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 56000... Done.
+Step: 57000/1000000 (5.70%) | Elapsed: 11.74 h          | Speed: 4886.61 steps/h    | ETA: 192.98 h            
+Step: 58000/1000000 (5.80%) | Elapsed: 11.95 h          | Speed: 4887.68 steps/h    | ETA: 192.73 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 58000... Done.
+Step: 59000/1000000 (5.90%) | Elapsed: 12.15 h          | Speed: 4894.21 steps/h    | ETA: 192.27 h            
+Step: 60000/1000000 (6.00%) | Elapsed: 12.35 h          | Speed: 4886.50 steps/h    | ETA: 192.37 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 60000... Done.
+Step: 61000/1000000 (6.10%) | Elapsed: 12.56 h          | Speed: 4885.61 steps/h    | ETA: 192.20 h            
+Step: 62000/1000000 (6.20%) | Elapsed: 12.76 h          | Speed: 4884.72 steps/h    | ETA: 192.03 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 62000... Done.
+Step: 63000/1000000 (6.30%) | Elapsed: 12.97 h          | Speed: 4885.15 steps/h    | ETA: 191.81 h            
+Step: 64000/1000000 (6.40%) | Elapsed: 13.17 h          | Speed: 4883.77 steps/h    | ETA: 191.66 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 64000... Done.
+Step: 65000/1000000 (6.50%) | Elapsed: 13.38 h          | Speed: 4879.11 steps/h    | ETA: 191.63 h            
+Step: 66000/1000000 (6.60%) | Elapsed: 13.58 h          | Speed: 4881.46 steps/h    | ETA: 191.34 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 66000... Done.
+Step: 67000/1000000 (6.70%) | Elapsed: 13.79 h          | Speed: 4883.51 steps/h    | ETA: 191.05 h            
+Step: 68000/1000000 (6.80%) | Elapsed: 13.99 h          | Speed: 4882.01 steps/h    | ETA: 190.91 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 68000... Done.
+Step: 69000/1000000 (6.90%) | Elapsed: 14.20 h          | Speed: 4831.61 steps/h    | ETA: 192.69 h            
+Step: 70000/1000000 (7.00%) | Elapsed: 14.41 h          | Speed: 4794.15 steps/h    | ETA: 193.99 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 70000... Done.
+Step: 71000/1000000 (7.10%) | Elapsed: 14.62 h          | Speed: 4823.62 steps/h    | ETA: 192.59 h            
+Step: 72000/1000000 (7.20%) | Elapsed: 14.82 h          | Speed: 4806.63 steps/h    | ETA: 193.07 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 72000... Done.
+Step: 73000/1000000 (7.30%) | Elapsed: 15.03 h          | Speed: 4836.26 steps/h    | ETA: 191.68 h            
+Step: 74000/1000000 (7.40%) | Elapsed: 15.24 h          | Speed: 4841.25 steps/h    | ETA: 191.27 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 74000... Done.
+Step: 75000/1000000 (7.50%) | Elapsed: 15.44 h          | Speed: 4836.04 steps/h    | ETA: 191.27 h            
+Step: 76000/1000000 (7.60%) | Elapsed: 15.65 h          | Speed: 4830.36 steps/h    | ETA: 191.29 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 76000... Done.
+Step: 77000/1000000 (7.70%) | Elapsed: 15.86 h          | Speed: 4822.44 steps/h    | ETA: 191.40 h            
+Step: 78000/1000000 (7.80%) | Elapsed: 16.06 h          | Speed: 4844.78 steps/h    | ETA: 190.31 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 78000... Done.
+Step: 79000/1000000 (7.90%) | Elapsed: 16.27 h          | Speed: 4830.64 steps/h    | ETA: 190.66 h            
+Step: 80000/1000000 (8.00%) | Elapsed: 16.48 h          | Speed: 4837.80 steps/h    | ETA: 190.17 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 80000... Done.
+Step: 81000/1000000 (8.10%) | Elapsed: 16.69 h          | Speed: 4845.23 steps/h    | ETA: 189.67 h            
+Step: 82000/1000000 (8.20%) | Elapsed: 16.89 h          | Speed: 4845.64 steps/h    | ETA: 189.45 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 82000... Done.
+Step: 83000/1000000 (8.30%) | Elapsed: 17.10 h          | Speed: 4854.41 steps/h    | ETA: 188.90 h            
+Step: 84000/1000000 (8.40%) | Elapsed: 17.30 h          | Speed: 4858.64 steps/h    | ETA: 188.53 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 84000... Done.
+Step: 85000/1000000 (8.50%) | Elapsed: 17.51 h          | Speed: 4857.49 steps/h    | ETA: 188.37 h            
+Step: 86000/1000000 (8.60%) | Elapsed: 17.72 h          | Speed: 4851.89 steps/h    | ETA: 188.38 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 86000... Done.
+Step: 87000/1000000 (8.70%) | Elapsed: 17.92 h          | Speed: 4852.33 steps/h    | ETA: 188.16 h            
+Step: 88000/1000000 (8.80%) | Elapsed: 18.13 h          | Speed: 4853.15 steps/h    | ETA: 187.92 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 88000... Done.
+Step: 89000/1000000 (8.90%) | Elapsed: 18.33 h          | Speed: 4848.58 steps/h    | ETA: 187.89 h            
+Step: 90000/1000000 (9.00%) | Elapsed: 18.54 h          | Speed: 4847.79 steps/h    | ETA: 187.71 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 90000... Done.
+Step: 91000/1000000 (9.10%) | Elapsed: 18.75 h          | Speed: 4847.44 steps/h    | ETA: 187.52 h            
+Step: 92000/1000000 (9.20%) | Elapsed: 18.95 h          | Speed: 4860.55 steps/h    | ETA: 186.81 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 92000... Done.
+Step: 93000/1000000 (9.30%) | Elapsed: 19.16 h          | Speed: 4843.55 steps/h    | ETA: 187.26 h            
+Step: 94000/1000000 (9.40%) | Elapsed: 19.36 h          | Speed: 4846.39 steps/h    | ETA: 186.94 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 94000... Done.
+Step: 95000/1000000 (9.50%) | Elapsed: 19.57 h          | Speed: 4848.57 steps/h    | ETA: 186.65 h            
+Step: 96000/1000000 (9.60%) | Elapsed: 19.78 h          | Speed: 4840.11 steps/h    | ETA: 186.77 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 96000... Done.
+Step: 97000/1000000 (9.70%) | Elapsed: 19.98 h          | Speed: 4846.79 steps/h    | ETA: 186.31 h            
+Step: 98000/1000000 (9.80%) | Elapsed: 20.19 h          | Speed: 4835.02 steps/h    | ETA: 186.56 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 98000... Done.
+Step: 99000/1000000 (9.90%) | Elapsed: 20.40 h          | Speed: 4842.14 steps/h    | ETA: 186.07 h            
+Step: 100000/1000000 (10.00%) | Elapsed: 20.60 h          | Speed: 4846.75 steps/h    | ETA: 185.69 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 100000... Done.
+Step: 101000/1000000 (10.10%) | Elapsed: 20.81 h          | Speed: 4844.14 steps/h    | ETA: 185.58 h            
+Step: 102000/1000000 (10.20%) | Elapsed: 21.02 h          | Speed: 4845.80 steps/h    | ETA: 185.32 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 102000... Done.
+Step: 103000/1000000 (10.30%) | Elapsed: 21.22 h          | Speed: 4843.96 steps/h    | ETA: 185.18 h            
+Step: 104000/1000000 (10.40%) | Elapsed: 21.43 h          | Speed: 4840.56 steps/h    | ETA: 185.10 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 104000... Done.
+Step: 105000/1000000 (10.50%) | Elapsed: 21.64 h          | Speed: 4848.65 steps/h    | ETA: 184.59 h            
+Step: 106000/1000000 (10.60%) | Elapsed: 21.84 h          | Speed: 4844.62 steps/h    | ETA: 184.53 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 106000... Done.
+Step: 107000/1000000 (10.70%) | Elapsed: 22.05 h          | Speed: 4831.14 steps/h    | ETA: 184.84 h            
+Step: 108000/1000000 (10.80%) | Elapsed: 22.26 h          | Speed: 4843.75 steps/h    | ETA: 184.15 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 108000... Done.
+Step: 109000/1000000 (10.90%) | Elapsed: 22.46 h          | Speed: 4838.71 steps/h    | ETA: 184.14 h            
+Step: 110000/1000000 (11.00%) | Elapsed: 22.67 h          | Speed: 4841.64 steps/h    | ETA: 183.82 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 110000... Done.
+Step: 111000/1000000 (11.10%) | Elapsed: 22.87 h          | Speed: 4859.56 steps/h    | ETA: 182.94 h            
+Step: 112000/1000000 (11.20%) | Elapsed: 23.08 h          | Speed: 4851.58 steps/h    | ETA: 183.03 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 112000... Done.
+Step: 113000/1000000 (11.30%) | Elapsed: 23.29 h          | Speed: 4855.57 steps/h    | ETA: 182.68 h            
+Step: 114000/1000000 (11.40%) | Elapsed: 23.49 h          | Speed: 4851.09 steps/h    | ETA: 182.64 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 114000... Done.
+Step: 115000/1000000 (11.50%) | Elapsed: 23.70 h          | Speed: 4842.72 steps/h    | ETA: 182.75 h            
+Step: 116000/1000000 (11.60%) | Elapsed: 23.91 h          | Speed: 4856.77 steps/h    | ETA: 182.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 116000... Done.
+Step: 117000/1000000 (11.70%) | Elapsed: 24.11 h          | Speed: 4854.58 steps/h    | ETA: 181.89 h            
+Step: 118000/1000000 (11.80%) | Elapsed: 24.32 h          | Speed: 4846.23 steps/h    | ETA: 182.00 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 118000... Done.
+Step: 119000/1000000 (11.90%) | Elapsed: 24.52 h          | Speed: 4850.29 steps/h    | ETA: 181.64 h            
+Step: 120000/1000000 (12.00%) | Elapsed: 24.73 h          | Speed: 4845.33 steps/h    | ETA: 181.62 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 120000... Done.
+Step: 121000/1000000 (12.10%) | Elapsed: 24.94 h          | Speed: 4842.25 steps/h    | ETA: 181.53 h            
+Step: 122000/1000000 (12.20%) | Elapsed: 25.14 h          | Speed: 4842.28 steps/h    | ETA: 181.32 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 122000... Done.
+Step: 123000/1000000 (12.30%) | Elapsed: 25.35 h          | Speed: 4837.47 steps/h    | ETA: 181.29 h            
+Step: 124000/1000000 (12.40%) | Elapsed: 25.56 h          | Speed: 4855.88 steps/h    | ETA: 180.40 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 124000... Done.
+Step: 125000/1000000 (12.50%) | Elapsed: 25.76 h          | Speed: 4845.07 steps/h    | ETA: 180.60 h            
+Step: 126000/1000000 (12.60%) | Elapsed: 25.97 h          | Speed: 4837.86 steps/h    | ETA: 180.66 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 126000... Done.
+Step: 127000/1000000 (12.70%) | Elapsed: 26.17 h          | Speed: 4855.03 steps/h    | ETA: 179.81 h            
+Step: 128000/1000000 (12.80%) | Elapsed: 26.38 h          | Speed: 4852.36 steps/h    | ETA: 179.71 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 128000... Done.
+Step: 129000/1000000 (12.90%) | Elapsed: 26.59 h          | Speed: 4845.32 steps/h    | ETA: 179.76 h            
+Step: 130000/1000000 (13.00%) | Elapsed: 26.79 h          | Speed: 4857.18 steps/h    | ETA: 179.12 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 130000... Done.
+Step: 131000/1000000 (13.10%) | Elapsed: 27.00 h          | Speed: 4855.92 steps/h    | ETA: 178.96 h            
+Step: 132000/1000000 (13.20%) | Elapsed: 27.21 h          | Speed: 4849.52 steps/h    | ETA: 178.99 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 132000... Done.
+Step: 133000/1000000 (13.30%) | Elapsed: 27.41 h          | Speed: 4846.58 steps/h    | ETA: 178.89 h            
+Step: 134000/1000000 (13.40%) | Elapsed: 27.62 h          | Speed: 4841.61 steps/h    | ETA: 178.87 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 134000... Done.
+Step: 135000/1000000 (13.50%) | Elapsed: 27.82 h          | Speed: 4858.55 steps/h    | ETA: 178.04 h            
+Step: 136000/1000000 (13.60%) | Elapsed: 28.03 h          | Speed: 4858.49 steps/h    | ETA: 177.83 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 136000... Done.
+Step: 137000/1000000 (13.70%) | Elapsed: 28.24 h          | Speed: 4857.01 steps/h    | ETA: 177.68 h            
+Step: 138000/1000000 (13.80%) | Elapsed: 28.44 h          | Speed: 4855.99 steps/h    | ETA: 177.51 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 138000... Done.
+Step: 139000/1000000 (13.90%) | Elapsed: 28.65 h          | Speed: 4853.10 steps/h    | ETA: 177.41 h            
+Step: 140000/1000000 (14.00%) | Elapsed: 28.85 h          | Speed: 4855.71 steps/h    | ETA: 177.11 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 140000... Done.
+Step: 141000/1000000 (14.10%) | Elapsed: 29.06 h          | Speed: 4860.62 steps/h    | ETA: 176.73 h            
+Step: 142000/1000000 (14.20%) | Elapsed: 29.27 h          | Speed: 4859.89 steps/h    | ETA: 176.55 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 142000... Done.
+Step: 143000/1000000 (14.30%) | Elapsed: 29.47 h          | Speed: 4849.26 steps/h    | ETA: 176.73 h            
+Step: 144000/1000000 (14.40%) | Elapsed: 29.68 h          | Speed: 4863.56 steps/h    | ETA: 176.00 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 144000... Done.
+Step: 145000/1000000 (14.50%) | Elapsed: 29.88 h          | Speed: 4824.75 steps/h    | ETA: 177.21 h            
+Step: 146000/1000000 (14.60%) | Elapsed: 30.09 h          | Speed: 4810.65 steps/h    | ETA: 177.52 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 146000... Done.
+Step: 147000/1000000 (14.70%) | Elapsed: 30.30 h          | Speed: 4827.79 steps/h    | ETA: 176.69 h            
+Step: 148000/1000000 (14.80%) | Elapsed: 30.51 h          | Speed: 4835.97 steps/h    | ETA: 176.18 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 148000... Done.
+Step: 149000/1000000 (14.90%) | Elapsed: 30.71 h          | Speed: 4819.81 steps/h    | ETA: 176.56 h            
+Step: 150000/1000000 (15.00%) | Elapsed: 30.92 h          | Speed: 4831.13 steps/h    | ETA: 175.94 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 150000... Done.
+Step: 151000/1000000 (15.10%) | Elapsed: 31.13 h          | Speed: 4840.35 steps/h    | ETA: 175.40 h            
+Step: 152000/1000000 (15.20%) | Elapsed: 31.33 h          | Speed: 4827.05 steps/h    | ETA: 175.68 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 152000... Done.
+Step: 153000/1000000 (15.30%) | Elapsed: 31.54 h          | Speed: 4838.67 steps/h    | ETA: 175.05 h            
+Step: 154000/1000000 (15.40%) | Elapsed: 31.75 h          | Speed: 4845.40 steps/h    | ETA: 174.60 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 154000... Done.
+Step: 155000/1000000 (15.50%) | Elapsed: 31.95 h          | Speed: 4838.48 steps/h    | ETA: 174.64 h            
+Step: 156000/1000000 (15.60%) | Elapsed: 32.16 h          | Speed: 4831.54 steps/h    | ETA: 174.69 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 156000... Done.
+Step: 157000/1000000 (15.70%) | Elapsed: 32.37 h          | Speed: 4835.54 steps/h    | ETA: 174.33 h            
+Step: 158000/1000000 (15.80%) | Elapsed: 32.57 h          | Speed: 4852.82 steps/h    | ETA: 173.51 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 158000... Done.
+Step: 159000/1000000 (15.90%) | Elapsed: 32.78 h          | Speed: 4833.83 steps/h    | ETA: 173.98 h            
+Step: 160000/1000000 (16.00%) | Elapsed: 32.99 h          | Speed: 4838.54 steps/h    | ETA: 173.61 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 160000... Done.
+Step: 161000/1000000 (16.10%) | Elapsed: 33.19 h          | Speed: 4858.82 steps/h    | ETA: 172.68 h            
+Step: 162000/1000000 (16.20%) | Elapsed: 33.40 h          | Speed: 4848.90 steps/h    | ETA: 172.82 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 162000... Done.
+Step: 163000/1000000 (16.30%) | Elapsed: 33.61 h          | Speed: 4847.38 steps/h    | ETA: 172.67 h            
+Step: 164000/1000000 (16.40%) | Elapsed: 33.81 h          | Speed: 4849.26 steps/h    | ETA: 172.40 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 164000... Done.
+Step: 165000/1000000 (16.50%) | Elapsed: 34.02 h          | Speed: 4856.28 steps/h    | ETA: 171.94 h            
+Step: 166000/1000000 (16.60%) | Elapsed: 34.22 h          | Speed: 4876.82 steps/h    | ETA: 171.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 166000... Done.
+Step: 167000/1000000 (16.70%) | Elapsed: 34.43 h          | Speed: 4894.84 steps/h    | ETA: 170.18 h            
+Step: 168000/1000000 (16.80%) | Elapsed: 34.63 h          | Speed: 4891.59 steps/h    | ETA: 170.09 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 168000... Done.
+Step: 169000/1000000 (16.90%) | Elapsed: 34.84 h          | Speed: 4887.22 steps/h    | ETA: 170.04 h            
+Step: 170000/1000000 (17.00%) | Elapsed: 35.04 h          | Speed: 4893.99 steps/h    | ETA: 169.60 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 170000... Done.
+Step: 171000/1000000 (17.10%) | Elapsed: 35.25 h          | Speed: 4889.50 steps/h    | ETA: 169.55 h            
+Step: 172000/1000000 (17.20%) | Elapsed: 35.45 h          | Speed: 4888.51 steps/h    | ETA: 169.38 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 172000... Done.
+Step: 173000/1000000 (17.30%) | Elapsed: 35.65 h          | Speed: 4889.52 steps/h    | ETA: 169.14 h            
+Step: 174000/1000000 (17.40%) | Elapsed: 35.86 h          | Speed: 4888.78 steps/h    | ETA: 168.96 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 174000... Done.
+Step: 175000/1000000 (17.50%) | Elapsed: 36.06 h          | Speed: 4887.82 steps/h    | ETA: 168.79 h            
+Step: 176000/1000000 (17.60%) | Elapsed: 36.27 h          | Speed: 4885.33 steps/h    | ETA: 168.67 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 176000... Done.
+Step: 177000/1000000 (17.70%) | Elapsed: 36.47 h          | Speed: 4887.12 steps/h    | ETA: 168.40 h            
+Step: 178000/1000000 (17.80%) | Elapsed: 36.68 h          | Speed: 4887.20 steps/h    | ETA: 168.19 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 178000... Done.
+Step: 179000/1000000 (17.90%) | Elapsed: 36.88 h          | Speed: 4888.65 steps/h    | ETA: 167.94 h            
+Step: 180000/1000000 (18.00%) | Elapsed: 37.09 h          | Speed: 4887.39 steps/h    | ETA: 167.78 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 180000... Done.
+Step: 181000/1000000 (18.10%) | Elapsed: 37.29 h          | Speed: 4889.25 steps/h    | ETA: 167.51 h            
+Step: 182000/1000000 (18.20%) | Elapsed: 37.50 h          | Speed: 4886.91 steps/h    | ETA: 167.39 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 182000... Done.
+Step: 183000/1000000 (18.30%) | Elapsed: 37.70 h          | Speed: 4886.81 steps/h    | ETA: 167.18 h            
+Step: 184000/1000000 (18.40%) | Elapsed: 37.90 h          | Speed: 4885.30 steps/h    | ETA: 167.03 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 184000... Done.
+Step: 185000/1000000 (18.50%) | Elapsed: 38.11 h          | Speed: 4893.81 steps/h    | ETA: 166.54 h            
+Step: 186000/1000000 (18.60%) | Elapsed: 38.31 h          | Speed: 4890.72 steps/h    | ETA: 166.44 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 186000... Done.
+Step: 187000/1000000 (18.70%) | Elapsed: 38.52 h          | Speed: 4892.23 steps/h    | ETA: 166.18 h            
+Step: 188000/1000000 (18.80%) | Elapsed: 38.72 h          | Speed: 4889.11 steps/h    | ETA: 166.08 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 188000... Done.
+Step: 189000/1000000 (18.90%) | Elapsed: 38.93 h          | Speed: 4886.69 steps/h    | ETA: 165.96 h            
+Step: 190000/1000000 (19.00%) | Elapsed: 39.13 h          | Speed: 4881.96 steps/h    | ETA: 165.92 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 190000... Done.
+Step: 191000/1000000 (19.10%) | Elapsed: 39.34 h          | Speed: 4879.28 steps/h    | ETA: 165.80 h            
+Step: 192000/1000000 (19.20%) | Elapsed: 39.54 h          | Speed: 4876.13 steps/h    | ETA: 165.71 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 192000... Done.
+Step: 193000/1000000 (19.30%) | Elapsed: 39.75 h          | Speed: 4880.31 steps/h    | ETA: 165.36 h            
+Step: 194000/1000000 (19.40%) | Elapsed: 39.95 h          | Speed: 4880.10 steps/h    | ETA: 165.16 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 194000... Done.
+Step: 195000/1000000 (19.50%) | Elapsed: 40.16 h          | Speed: 4883.05 steps/h    | ETA: 164.86 h            
+Step: 196000/1000000 (19.60%) | Elapsed: 40.36 h          | Speed: 4890.30 steps/h    | ETA: 164.41 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 196000... Done.
+Step: 197000/1000000 (19.70%) | Elapsed: 40.57 h          | Speed: 4890.38 steps/h    | ETA: 164.20 h            
+Step: 198000/1000000 (19.80%) | Elapsed: 40.77 h          | Speed: 4889.46 steps/h    | ETA: 164.03 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 198000... Done.
+Step: 199000/1000000 (19.90%) | Elapsed: 40.97 h          | Speed: 4891.81 steps/h    | ETA: 163.74 h            
+Step: 200000/1000000 (20.00%) | Elapsed: 41.18 h          | Speed: 4888.78 steps/h    | ETA: 163.64 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 200000... Done.
+Step: 201000/1000000 (20.10%) | Elapsed: 41.38 h          | Speed: 4886.82 steps/h    | ETA: 163.50 h            
+Step: 202000/1000000 (20.20%) | Elapsed: 41.59 h          | Speed: 4885.27 steps/h    | ETA: 163.35 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 202000... Done.
+Step: 203000/1000000 (20.30%) | Elapsed: 41.79 h          | Speed: 4886.32 steps/h    | ETA: 163.11 h            
+Step: 204000/1000000 (20.40%) | Elapsed: 42.00 h          | Speed: 4886.11 steps/h    | ETA: 162.91 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 204000... Done.
+Step: 205000/1000000 (20.50%) | Elapsed: 42.20 h          | Speed: 4880.00 steps/h    | ETA: 162.91 h            

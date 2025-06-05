@@ -14,6 +14,7 @@ from ..utils.general_utils import *
 from ..utils.dist_utils import *
 from ..utils import grad_clip_utils, elastic_utils
 
+from safetensors.torch import load_file as safe_load_file
 
 class BasicTrainer(Trainer):
     """
@@ -271,7 +272,12 @@ class BasicTrainer(Trainer):
         for name, model in self.models.items():
             model_state_dict = model.state_dict()
             if name in finetune_ckpt:
-                model_ckpt = torch.load(read_file_dist(finetune_ckpt[name]), map_location=self.device, weights_only=True)
+                if finetune_ckpt[name].endswith(".safetensors"):
+                    print("Load from safetensors")
+                    print("-----------------------------------")
+                    model_ckpt = safe_load_file(finetune_ckpt[name])
+                else:
+                    model_ckpt = torch.load(read_file_dist(finetune_ckpt[name]), map_location=self.device, weights_only=True)
                 for k, v in model_ckpt.items():
                     if model_ckpt[k].shape != model_state_dict[k].shape:
                         if self.is_master:

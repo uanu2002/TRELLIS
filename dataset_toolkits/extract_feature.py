@@ -93,8 +93,8 @@ if __name__ == '__main__':
             metadata = metadata[metadata['aesthetic_score'] >= opt.filter_low_aesthetic_score]
         if f'feature_{feature_name}' in metadata.columns:
             metadata = metadata[metadata[f'feature_{feature_name}'] == False]
-        metadata = metadata[metadata['voxelized'] == True]
-        metadata = metadata[metadata['rendered'] == True]
+        # metadata = metadata[metadata['voxelized'] == True]
+        # metadata = metadata[metadata['rendered'] == True]
 
     start = len(metadata) * opt.rank // opt.world_size
     end = len(metadata) * (opt.rank + 1) // opt.world_size

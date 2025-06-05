@@ -14,7 +14,7 @@ class TextConditionedMixin:
     Args:
         text_cond_model: The text conditioning model.
     """
-    def __init__(self, *args, text_cond_model: str = 'openai/clip-vit-large-patch14', **kwargs):
+    def __init__(self, *args, text_cond_model: str = './openai/clip-vit-large-patch14', **kwargs):
         super().__init__(*args, **kwargs)
         self.text_cond_model_name = text_cond_model
         self.text_cond_model = None     # the model is init lazily

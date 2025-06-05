@@ -68,7 +68,7 @@ if __name__ == '__main__':
     else:
         if opt.filter_low_aesthetic_score is not None:
             metadata = metadata[metadata['aesthetic_score'] >= opt.filter_low_aesthetic_score]
-        metadata = metadata[metadata[f'feature_{opt.feat_model}'] == True]
+        # metadata = metadata[metadata[f'feature_{opt.feat_model}'] == True]
         if f'latent_{latent_name}' in metadata.columns:
             metadata = metadata[metadata[f'latent_{latent_name}'] == False]
 

@@ -78,7 +78,7 @@ def foreach_instance(metadata, output_dir, func, max_workers=None, desc='Process
 
     # processing objects
     records = []
-    max_workers = max_workers or os.cpu_count()
+    max_workers = 20 #max_workers or os.cpu_count()
     try:
         with ThreadPoolExecutor(max_workers=max_workers) as executor, \
             tqdm(total=len(metadata), desc=desc) as pbar:

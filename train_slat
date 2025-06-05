@@ -1,0 +1,1503 @@
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+
+
+Config:
+================================================================================
+{
+    "config": "configs/generation/slat_flow_txt_dit_B_64l8p2_fp16.json",
+    "output_dir": "outputs/slat_flow_txt_dit_B_64l8p2_fp16_1node_from_scratch",
+    "load_dir": "outputs/slat_flow_txt_dit_B_64l8p2_fp16_1node_from_scratch",
+    "ckpt": "latest",
+    "data_dir": "datasets/T8",
+    "auto_retry": 3,
+    "tryrun": false,
+    "profile": false,
+    "num_nodes": 1,
+    "node_rank": 0,
+    "num_gpus": 4,
+    "master_addr": "localhost",
+    "master_port": "12345",
+    "models": {
+        "denoiser": {
+            "name": "ElasticSLatFlowModel",
+            "args": {
+                "resolution": 64,
+                "in_channels": 8,
+                "out_channels": 8,
+                "model_channels": 768,
+                "cond_channels": 768,
+                "num_blocks": 12,
+                "num_heads": 12,
+                "mlp_ratio": 4,
+                "patch_size": 2,
+                "num_io_res_blocks": 2,
+                "io_block_channels": [
+                    128
+                ],
+                "pe_mode": "ape",
+                "qk_rms_norm": true,
+                "use_fp16": true
+            }
+        }
+    },
+    "dataset": {
+        "name": "TextConditionedSLat",
+        "args": {
+            "latent_model": "dinov2_vitl14_reg_slat_enc_swin8_B_64l8_fp16",
+            "min_aesthetic_score": 0,
+            "max_num_voxels": 32768,
+            "normalization": {
+                "mean": [
+                    -2.1687545776367188,
+                    -0.004347046371549368,
+                    -0.13352349400520325,
+                    -0.08418072760105133,
+                    -0.5271206498146057,
+                    0.7238689064979553,
+                    -1.1414450407028198,
+                    1.2039363384246826
+                ],
+                "std": [
+                    2.377650737762451,
+                    2.386378288269043,
+                    2.124418020248413,
+                    2.1748552322387695,
+                    2.663944721221924,
+                    2.371192216873169,
+                    2.6217446327209473,
+                    2.684523105621338
+                ]
+            },
+            "pretrained_slat_dec": "microsoft/TRELLIS-image-large/ckpts/slat_dec_gs_swin8_B_64l8gs32_fp16"
+        }
+    },
+    "trainer": {
+        "name": "TextConditionedSparseFlowMatchingCFGTrainer",
+        "args": {
+            "max_steps": 1000000,
+            "batch_size_per_gpu": 16,
+            "batch_split": 4,
+            "optimizer": {
+                "name": "AdamW",
+                "args": {
+                    "lr": 0.0001,
+                    "weight_decay": 0.0
+                }
+            },
+            "ema_rate": [
+                0.9999
+            ],
+            "fp16_mode": "inflat_all",
+            "fp16_scale_growth": 0.001,
+            "elastic": {
+                "name": "LinearMemoryController",
+                "args": {
+                    "target_ratio": 0.75,
+                    "max_mem_ratio_start": 0.5
+                }
+            },
+            "grad_clip": {
+                "name": "AdaptiveGradClipper",
+                "args": {
+                    "max_norm": 1.0,
+                    "clip_percentile": 95
+                }
+            },
+            "i_log": 500,
+            "i_sample": 2000,
+            "i_save": 2000,
+            "p_uncond": 0.1,
+            "t_schedule": {
+                "name": "logitNormal",
+                "args": {
+                    "mean": 1.0,
+                    "std": 1.0
+                }
+            },
+            "sigma_min": 1e-05,
+            "text_cond_model": "openai/clip-vit-large-patch14"
+        }
+    }
+}
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+[SPARSE] Backend: spconv, Attention: flash_attn
+Warp 1.7.1 initialized:
+   CUDA Toolkit 12.8, Driver 12.1
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:1"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:2"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+     "cuda:3"   : "NVIDIA A800-SXM4-80GB" (79 GiB, sm_80, mempool enabled)
+   CUDA peer access:
+     Supported fully (all-directional)
+   Kernel cache:
+     /root/.cache/warp/1.7.1
+[SPARSE][CONV] spconv algo: auto
+[ATTENTION] Using backend: flash_attn
+
+
+Backbone: denoiser
+Parameters:
+================================================================================================================================
+Name                                                                    Shape                           Type            Grad
+t_embedder.mlp.0.weight                                                 torch.Size([768, 256])          torch.float32   True
+t_embedder.mlp.0.bias                                                   torch.Size([768])               torch.float32   True
+t_embedder.mlp.2.weight                                                 torch.Size([768, 768])          torch.float32   True
+t_embedder.mlp.2.bias                                                   torch.Size([768])               torch.float32   True
+input_layer.weight                                                      torch.Size([128, 8])            torch.float32   True
+input_layer.bias                                                        torch.Size([128])               torch.float32   True
+input_blocks.0.norm1.weight                                             torch.Size([128])               torch.float32   True
+input_blocks.0.norm1.bias                                               torch.Size([128])               torch.float32   True
+input_blocks.0.conv1.conv.weight                                        torch.Size([128, 3, 3, 3, 128]) torch.float16   True
+input_blocks.0.conv1.conv.bias                                          torch.Size([128])               torch.float16   True
+input_blocks.0.conv2.conv.weight                                        torch.Size([128, 3, 3, 3, 128]) torch.float16   True
+input_blocks.0.conv2.conv.bias                                          torch.Size([128])               torch.float16   True
+input_blocks.0.emb_layers.1.weight                                      torch.Size([256, 768])          torch.float16   True
+input_blocks.0.emb_layers.1.bias                                        torch.Size([256])               torch.float16   True
+input_blocks.1.norm1.weight                                             torch.Size([128])               torch.float32   True
+input_blocks.1.norm1.bias                                               torch.Size([128])               torch.float32   True
+input_blocks.1.conv1.conv.weight                                        torch.Size([768, 3, 3, 3, 128]) torch.float16   True
+input_blocks.1.conv1.conv.bias                                          torch.Size([768])               torch.float16   True
+input_blocks.1.conv2.conv.weight                                        torch.Size([768, 3, 3, 3, 768]) torch.float16   True
+input_blocks.1.conv2.conv.bias                                          torch.Size([768])               torch.float16   True
+input_blocks.1.emb_layers.1.weight                                      torch.Size([1536, 768])         torch.float16   True
+input_blocks.1.emb_layers.1.bias                                        torch.Size([1536])              torch.float16   True
+input_blocks.1.skip_connection.weight                                   torch.Size([768, 128])          torch.float16   True
+input_blocks.1.skip_connection.bias                                     torch.Size([768])               torch.float16   True
+blocks.0.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.0.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.0.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.0.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.0.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.0.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.0.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.0.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.0.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.0.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.0.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.0.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.0.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.0.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.0.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.0.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.0.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.0.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.0.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.0.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.1.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.1.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.1.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.1.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.1.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.1.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.1.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.1.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.1.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.1.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.1.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.1.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.1.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.1.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.1.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.1.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.1.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.1.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.1.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.1.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.2.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.2.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.2.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.2.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.2.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.2.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.2.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.2.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.2.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.2.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.2.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.2.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.2.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.2.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.2.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.2.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.2.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.2.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.2.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.2.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.3.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.3.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.3.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.3.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.3.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.3.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.3.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.3.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.3.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.3.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.3.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.3.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.3.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.3.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.3.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.3.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.3.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.3.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.3.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.3.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.4.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.4.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.4.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.4.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.4.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.4.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.4.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.4.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.4.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.4.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.4.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.4.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.4.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.4.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.4.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.4.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.4.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.4.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.4.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.4.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.5.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.5.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.5.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.5.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.5.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.5.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.5.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.5.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.5.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.5.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.5.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.5.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.5.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.5.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.5.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.5.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.5.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.5.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.5.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.5.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.6.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.6.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.6.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.6.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.6.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.6.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.6.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.6.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.6.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.6.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.6.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.6.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.6.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.6.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.6.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.6.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.6.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.6.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.6.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.6.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.7.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.7.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.7.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.7.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.7.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.7.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.7.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.7.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.7.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.7.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.7.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.7.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.7.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.7.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.7.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.7.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.7.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.7.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.7.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.7.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.8.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.8.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.8.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.8.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.8.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.8.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.8.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.8.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.8.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.8.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.8.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.8.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.8.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.8.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.8.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.8.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.8.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.8.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.8.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.8.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.9.norm2.weight                                                   torch.Size([768])               torch.float32   True
+blocks.9.norm2.bias                                                     torch.Size([768])               torch.float32   True
+blocks.9.self_attn.to_qkv.weight                                        torch.Size([2304, 768])         torch.float16   True
+blocks.9.self_attn.to_qkv.bias                                          torch.Size([2304])              torch.float16   True
+blocks.9.self_attn.q_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.9.self_attn.k_rms_norm.gamma                                     torch.Size([12, 64])            torch.float32   True
+blocks.9.self_attn.to_out.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.9.self_attn.to_out.bias                                          torch.Size([768])               torch.float16   True
+blocks.9.cross_attn.to_q.weight                                         torch.Size([768, 768])          torch.float16   True
+blocks.9.cross_attn.to_q.bias                                           torch.Size([768])               torch.float16   True
+blocks.9.cross_attn.to_kv.weight                                        torch.Size([1536, 768])         torch.float16   True
+blocks.9.cross_attn.to_kv.bias                                          torch.Size([1536])              torch.float16   True
+blocks.9.cross_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.9.cross_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.9.mlp.mlp.0.weight                                               torch.Size([3072, 768])         torch.float16   True
+blocks.9.mlp.mlp.0.bias                                                 torch.Size([3072])              torch.float16   True
+blocks.9.mlp.mlp.2.weight                                               torch.Size([768, 3072])         torch.float16   True
+blocks.9.mlp.mlp.2.bias                                                 torch.Size([768])               torch.float16   True
+blocks.9.adaLN_modulation.1.weight                                      torch.Size([4608, 768])         torch.float16   True
+blocks.9.adaLN_modulation.1.bias                                        torch.Size([4608])              torch.float16   True
+blocks.10.norm2.weight                                                  torch.Size([768])               torch.float32   True
+blocks.10.norm2.bias                                                    torch.Size([768])               torch.float32   True
+blocks.10.self_attn.to_qkv.weight                                       torch.Size([2304, 768])         torch.float16   True
+blocks.10.self_attn.to_qkv.bias                                         torch.Size([2304])              torch.float16   True
+blocks.10.self_attn.q_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.10.self_attn.k_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.10.self_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.10.self_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.10.cross_attn.to_q.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.10.cross_attn.to_q.bias                                          torch.Size([768])               torch.float16   True
+blocks.10.cross_attn.to_kv.weight                                       torch.Size([1536, 768])         torch.float16   True
+blocks.10.cross_attn.to_kv.bias                                         torch.Size([1536])              torch.float16   True
+blocks.10.cross_attn.to_out.weight                                      torch.Size([768, 768])          torch.float16   True
+blocks.10.cross_attn.to_out.bias                                        torch.Size([768])               torch.float16   True
+blocks.10.mlp.mlp.0.weight                                              torch.Size([3072, 768])         torch.float16   True
+blocks.10.mlp.mlp.0.bias                                                torch.Size([3072])              torch.float16   True
+blocks.10.mlp.mlp.2.weight                                              torch.Size([768, 3072])         torch.float16   True
+blocks.10.mlp.mlp.2.bias                                                torch.Size([768])               torch.float16   True
+blocks.10.adaLN_modulation.1.weight                                     torch.Size([4608, 768])         torch.float16   True
+blocks.10.adaLN_modulation.1.bias                                       torch.Size([4608])              torch.float16   True
+blocks.11.norm2.weight                                                  torch.Size([768])               torch.float32   True
+blocks.11.norm2.bias                                                    torch.Size([768])               torch.float32   True
+blocks.11.self_attn.to_qkv.weight                                       torch.Size([2304, 768])         torch.float16   True
+blocks.11.self_attn.to_qkv.bias                                         torch.Size([2304])              torch.float16   True
+blocks.11.self_attn.q_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.11.self_attn.k_rms_norm.gamma                                    torch.Size([12, 64])            torch.float32   True
+blocks.11.self_attn.to_out.weight                                       torch.Size([768, 768])          torch.float16   True
+blocks.11.self_attn.to_out.bias                                         torch.Size([768])               torch.float16   True
+blocks.11.cross_attn.to_q.weight                                        torch.Size([768, 768])          torch.float16   True
+blocks.11.cross_attn.to_q.bias                                          torch.Size([768])               torch.float16   True
+blocks.11.cross_attn.to_kv.weight                                       torch.Size([1536, 768])         torch.float16   True
+blocks.11.cross_attn.to_kv.bias                                         torch.Size([1536])              torch.float16   True
+blocks.11.cross_attn.to_out.weight                                      torch.Size([768, 768])          torch.float16   True
+blocks.11.cross_attn.to_out.bias                                        torch.Size([768])               torch.float16   True
+blocks.11.mlp.mlp.0.weight                                              torch.Size([3072, 768])         torch.float16   True
+blocks.11.mlp.mlp.0.bias                                                torch.Size([3072])              torch.float16   True
+blocks.11.mlp.mlp.2.weight                                              torch.Size([768, 3072])         torch.float16   True
+blocks.11.mlp.mlp.2.bias                                                torch.Size([768])               torch.float16   True
+blocks.11.adaLN_modulation.1.weight                                     torch.Size([4608, 768])         torch.float16   True
+blocks.11.adaLN_modulation.1.bias                                       torch.Size([4608])              torch.float16   True
+out_blocks.0.norm1.weight                                               torch.Size([1536])              torch.float32   True
+out_blocks.0.norm1.bias                                                 torch.Size([1536])              torch.float32   True
+out_blocks.0.conv1.conv.weight                                          torch.Size([128, 3, 3, 3, 1536])torch.float16   True
+out_blocks.0.conv1.conv.bias                                            torch.Size([128])               torch.float16   True
+out_blocks.0.conv2.conv.weight                                          torch.Size([128, 3, 3, 3, 128]) torch.float16   True
+out_blocks.0.conv2.conv.bias                                            torch.Size([128])               torch.float16   True
+out_blocks.0.emb_layers.1.weight                                        torch.Size([256, 768])          torch.float16   True
+out_blocks.0.emb_layers.1.bias                                          torch.Size([256])               torch.float16   True
+out_blocks.0.skip_connection.weight                                     torch.Size([128, 1536])         torch.float16   True
+out_blocks.0.skip_connection.bias                                       torch.Size([128])               torch.float16   True
+out_blocks.1.norm1.weight                                               torch.Size([256])               torch.float32   True
+out_blocks.1.norm1.bias                                                 torch.Size([256])               torch.float32   True
+out_blocks.1.conv1.conv.weight                                          torch.Size([128, 3, 3, 3, 256]) torch.float16   True
+out_blocks.1.conv1.conv.bias                                            torch.Size([128])               torch.float16   True
+out_blocks.1.conv2.conv.weight                                          torch.Size([128, 3, 3, 3, 128]) torch.float16   True
+out_blocks.1.conv2.conv.bias                                            torch.Size([128])               torch.float16   True
+out_blocks.1.emb_layers.1.weight                                        torch.Size([256, 768])          torch.float16   True
+out_blocks.1.emb_layers.1.bias                                          torch.Size([256])               torch.float16   True
+out_blocks.1.skip_connection.weight                                     torch.Size([128, 256])          torch.float16   True
+out_blocks.1.skip_connection.bias                                       torch.Size([128])               torch.float16   True
+out_layer.weight                                                        torch.Size([8, 128])            torch.float32   True
+out_layer.bias                                                          torch.Size([8])                 torch.float32   True
+
+Number of parameters: 185364616
+Number of trainable parameters: 185364616
+
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+
+Trainer initialized.
+TextConditionedSparseFlowMatchingCFGTrainer
+  - Models:
+    - denoiser: ElasticSLatFlowModel
+  - Dataset: TextConditionedSLat
+    - Total instances: 200
+    - Sources:
+      - T8:
+        - Total: 200
+        - With latent: 200
+        - Aesthetic score >= 0: 200
+        - Num voxels <= 32768: 200
+        - With captions: 200
+  - Dataloader:
+    - Sampler: BalancedResumableSampler
+    - Num workers: 32
+  - Number of steps: 1000000
+  - Number of GPUs: 4
+  - Batch size: 64
+  - Batch size per GPU: 16
+  - Batch split: 4
+  - Optimizer: AdamW
+  - Learning rate: 0.0001
+  - Elastic memory: LinearMemoryController(target_ratio=0.75, available_memory=79.34686279296875)
+  - Gradient clip: AdaptiveGradClipper(max_norm=1.0, clip_percentile=95)
+  - EMA rate: [0.9999]
+  - FP16 mode: inflat_all
+
+Starting training...
+
+Sampling 64 images... Done.
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:47: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  _TORCH_CUSTOM_FWD = amp.custom_fwd(cast_inputs=torch.float16)
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:97: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:163: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:243: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:332: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:369: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:389: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/root/miniconda3/envs/trellis/lib/python3.10/site-packages/spconv/pytorch/functional.py:412: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+Step: 1000/1000000 (0.10%) | Elapsed: 0.30 h           | Speed: 3334.01 steps/h    | ETA: 299.64 h            
+Step: 2000/1000000 (0.20%) | Elapsed: 0.49 h           | Speed: 5241.42 steps/h    | ETA: 190.41 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 2000... Done.
+Step: 3000/1000000 (0.30%) | Elapsed: 0.68 h           | Speed: 5258.77 steps/h    | ETA: 189.59 h            
+Step: 4000/1000000 (0.40%) | Elapsed: 0.87 h           | Speed: 5243.77 steps/h    | ETA: 189.94 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 4000... Done.
+Step: 5000/1000000 (0.50%) | Elapsed: 1.06 h           | Speed: 5209.52 steps/h    | ETA: 191.00 h            
+Step: 6000/1000000 (0.60%) | Elapsed: 1.25 h           | Speed: 5274.65 steps/h    | ETA: 188.45 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 6000... Done.
+Step: 7000/1000000 (0.70%) | Elapsed: 1.44 h           | Speed: 5264.18 steps/h    | ETA: 188.63 h            
+Step: 8000/1000000 (0.80%) | Elapsed: 1.63 h           | Speed: 5259.78 steps/h    | ETA: 188.60 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 8000... Done.
+Step: 9000/1000000 (0.90%) | Elapsed: 1.82 h           | Speed: 5278.86 steps/h    | ETA: 187.73 h            
+Step: 10000/1000000 (1.00%) | Elapsed: 2.01 h           | Speed: 5269.76 steps/h    | ETA: 187.86 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 10000... Done.
+Step: 11000/1000000 (1.10%) | Elapsed: 2.20 h           | Speed: 5301.99 steps/h    | ETA: 186.53 h            
+Step: 12000/1000000 (1.20%) | Elapsed: 2.39 h           | Speed: 5270.12 steps/h    | ETA: 187.47 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 12000... Done.
+Step: 13000/1000000 (1.30%) | Elapsed: 2.58 h           | Speed: 5277.11 steps/h    | ETA: 187.03 h            
+Step: 14000/1000000 (1.40%) | Elapsed: 2.77 h           | Speed: 5272.99 steps/h    | ETA: 186.99 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 14000... Done.
+Step: 15000/1000000 (1.50%) | Elapsed: 2.96 h           | Speed: 5268.28 steps/h    | ETA: 186.97 h            
+Step: 16000/1000000 (1.60%) | Elapsed: 3.15 h           | Speed: 5242.40 steps/h    | ETA: 187.70 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 16000... Done.
+Step: 17000/1000000 (1.70%) | Elapsed: 3.34 h           | Speed: 5261.90 steps/h    | ETA: 186.81 h            
+Step: 18000/1000000 (1.80%) | Elapsed: 3.53 h           | Speed: 5279.25 steps/h    | ETA: 186.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 18000... Done.
+Step: 19000/1000000 (1.90%) | Elapsed: 3.72 h           | Speed: 5271.22 steps/h    | ETA: 186.11 h            
+Step: 20000/1000000 (2.00%) | Elapsed: 3.91 h           | Speed: 5276.84 steps/h    | ETA: 185.72 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 20000... Done.
+Step: 21000/1000000 (2.10%) | Elapsed: 4.10 h           | Speed: 5276.93 steps/h    | ETA: 185.52 h            
+Step: 22000/1000000 (2.20%) | Elapsed: 4.29 h           | Speed: 5270.14 steps/h    | ETA: 185.57 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 22000... Done.
+Step: 23000/1000000 (2.30%) | Elapsed: 4.48 h           | Speed: 5268.63 steps/h    | ETA: 185.44 h            
+Step: 24000/1000000 (2.40%) | Elapsed: 4.67 h           | Speed: 5262.15 steps/h    | ETA: 185.48 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 24000... Done.
+Step: 25000/1000000 (2.50%) | Elapsed: 4.86 h           | Speed: 5244.88 steps/h    | ETA: 185.90 h            
+Step: 26000/1000000 (2.60%) | Elapsed: 5.05 h           | Speed: 5295.48 steps/h    | ETA: 183.93 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 26000... Done.
+Step: 27000/1000000 (2.70%) | Elapsed: 5.24 h           | Speed: 5310.87 steps/h    | ETA: 183.21 h            
+Step: 28000/1000000 (2.80%) | Elapsed: 5.42 h           | Speed: 5299.13 steps/h    | ETA: 183.43 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 28000... Done.
+Step: 29000/1000000 (2.90%) | Elapsed: 5.61 h           | Speed: 5291.68 steps/h    | ETA: 183.50 h            
+Step: 30000/1000000 (3.00%) | Elapsed: 5.80 h           | Speed: 5309.44 steps/h    | ETA: 182.69 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 30000... Done.
+Step: 31000/1000000 (3.10%) | Elapsed: 5.99 h           | Speed: 5285.01 steps/h    | ETA: 183.35 h            
+Step: 32000/1000000 (3.20%) | Elapsed: 6.18 h           | Speed: 5333.91 steps/h    | ETA: 181.48 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 32000... Done.
+Step: 33000/1000000 (3.30%) | Elapsed: 6.37 h           | Speed: 5326.51 steps/h    | ETA: 181.54 h            
+Step: 34000/1000000 (3.40%) | Elapsed: 6.55 h           | Speed: 5317.38 steps/h    | ETA: 181.67 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 34000... Done.
+Step: 35000/1000000 (3.50%) | Elapsed: 6.74 h           | Speed: 5318.30 steps/h    | ETA: 181.45 h            
+Step: 36000/1000000 (3.60%) | Elapsed: 6.93 h           | Speed: 5305.04 steps/h    | ETA: 181.71 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 36000... Done.
+Step: 37000/1000000 (3.70%) | Elapsed: 7.12 h           | Speed: 5302.98 steps/h    | ETA: 181.60 h            
+Step: 38000/1000000 (3.80%) | Elapsed: 7.31 h           | Speed: 5267.78 steps/h    | ETA: 182.62 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 38000... Done.
+Step: 39000/1000000 (3.90%) | Elapsed: 7.50 h           | Speed: 5234.25 steps/h    | ETA: 183.60 h            
+Step: 40000/1000000 (4.00%) | Elapsed: 7.69 h           | Speed: 5294.52 steps/h    | ETA: 181.32 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 40000... Done.
+Step: 41000/1000000 (4.10%) | Elapsed: 7.88 h           | Speed: 5336.58 steps/h    | ETA: 179.70 h            
+Step: 42000/1000000 (4.20%) | Elapsed: 8.06 h           | Speed: 5326.28 steps/h    | ETA: 179.86 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 42000... Done.
+Step: 43000/1000000 (4.30%) | Elapsed: 8.25 h           | Speed: 5309.96 steps/h    | ETA: 180.23 h            
+Step: 44000/1000000 (4.40%) | Elapsed: 8.44 h           | Speed: 5339.30 steps/h    | ETA: 179.05 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 44000... Done.
+Step: 45000/1000000 (4.50%) | Elapsed: 8.63 h           | Speed: 5334.32 steps/h    | ETA: 179.03 h            
+Step: 46000/1000000 (4.60%) | Elapsed: 8.81 h           | Speed: 5347.76 steps/h    | ETA: 178.39 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 46000... Done.
+Step: 47000/1000000 (4.70%) | Elapsed: 9.00 h           | Speed: 5367.37 steps/h    | ETA: 177.55 h            
+Step: 48000/1000000 (4.80%) | Elapsed: 9.19 h           | Speed: 5237.59 steps/h    | ETA: 181.76 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 48000... Done.
+Step: 49000/1000000 (4.90%) | Elapsed: 9.38 h           | Speed: 5301.48 steps/h    | ETA: 179.38 h            
+Step: 50000/1000000 (5.00%) | Elapsed: 9.57 h           | Speed: 5229.08 steps/h    | ETA: 181.68 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 50000... Done.
+Step: 51000/1000000 (5.10%) | Elapsed: 9.76 h           | Speed: 5240.73 steps/h    | ETA: 181.08 h            
+Step: 52000/1000000 (5.20%) | Elapsed: 9.95 h           | Speed: 5295.21 steps/h    | ETA: 179.03 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 52000... Done.
+Step: 53000/1000000 (5.30%) | Elapsed: 10.14 h          | Speed: 5281.51 steps/h    | ETA: 179.30 h            
+Step: 54000/1000000 (5.40%) | Elapsed: 10.33 h          | Speed: 5179.76 steps/h    | ETA: 182.63 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 54000... Done.
+Step: 55000/1000000 (5.50%) | Elapsed: 10.52 h          | Speed: 5270.74 steps/h    | ETA: 179.29 h            
+Step: 56000/1000000 (5.60%) | Elapsed: 10.71 h          | Speed: 5322.33 steps/h    | ETA: 177.37 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 56000... Done.
+Step: 57000/1000000 (5.70%) | Elapsed: 10.90 h          | Speed: 5359.00 steps/h    | ETA: 175.97 h            
+Step: 58000/1000000 (5.80%) | Elapsed: 11.08 h          | Speed: 5351.70 steps/h    | ETA: 176.02 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 58000... Done.
+Step: 59000/1000000 (5.90%) | Elapsed: 11.27 h          | Speed: 5328.02 steps/h    | ETA: 176.61 h            
+Step: 60000/1000000 (6.00%) | Elapsed: 11.46 h          | Speed: 5305.57 steps/h    | ETA: 177.17 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 60000... Done.
+Step: 61000/1000000 (6.10%) | Elapsed: 11.65 h          | Speed: 5282.39 steps/h    | ETA: 177.76 h            
+Step: 62000/1000000 (6.20%) | Elapsed: 11.84 h          | Speed: 5334.81 steps/h    | ETA: 175.83 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 62000... Done.
+Step: 63000/1000000 (6.30%) | Elapsed: 12.02 h          | Speed: 5360.27 steps/h    | ETA: 174.80 h            
+Step: 64000/1000000 (6.40%) | Elapsed: 12.21 h          | Speed: 5334.54 steps/h    | ETA: 175.46 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 64000... Done.
+Step: 65000/1000000 (6.50%) | Elapsed: 12.40 h          | Speed: 5279.21 steps/h    | ETA: 177.11 h            
+Step: 66000/1000000 (6.60%) | Elapsed: 12.59 h          | Speed: 5301.29 steps/h    | ETA: 176.18 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 66000... Done.
+Step: 67000/1000000 (6.70%) | Elapsed: 12.78 h          | Speed: 5292.90 steps/h    | ETA: 176.27 h            
+Step: 68000/1000000 (6.80%) | Elapsed: 12.97 h          | Speed: 5312.62 steps/h    | ETA: 175.43 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 68000... Done.
+Step: 69000/1000000 (6.90%) | Elapsed: 13.15 h          | Speed: 5335.41 steps/h    | ETA: 174.49 h            
+Step: 70000/1000000 (7.00%) | Elapsed: 13.34 h          | Speed: 5346.86 steps/h    | ETA: 173.93 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 70000... Done.
+Step: 71000/1000000 (7.10%) | Elapsed: 13.53 h          | Speed: 5340.35 steps/h    | ETA: 173.96 h            
+Step: 72000/1000000 (7.20%) | Elapsed: 13.72 h          | Speed: 5279.55 steps/h    | ETA: 175.77 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 72000... Done.
+Step: 73000/1000000 (7.30%) | Elapsed: 13.92 h          | Speed: 4999.84 steps/h    | ETA: 185.41 h            
+Step: 74000/1000000 (7.40%) | Elapsed: 14.15 h          | Speed: 4301.91 steps/h    | ETA: 215.25 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 74000... Done.
+Step: 75000/1000000 (7.50%) | Elapsed: 14.37 h          | Speed: 4544.17 steps/h    | ETA: 203.56 h            
+Step: 76000/1000000 (7.60%) | Elapsed: 14.59 h          | Speed: 4661.89 steps/h    | ETA: 198.20 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 76000... Done.
+Step: 77000/1000000 (7.70%) | Elapsed: 14.80 h          | Speed: 4617.90 steps/h    | ETA: 199.87 h            
+Step: 78000/1000000 (7.80%) | Elapsed: 15.01 h          | Speed: 4836.50 steps/h    | ETA: 190.63 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 78000... Done.
+Step: 79000/1000000 (7.90%) | Elapsed: 15.23 h          | Speed: 4613.62 steps/h    | ETA: 199.63 h            
+Step: 80000/1000000 (8.00%) | Elapsed: 15.44 h          | Speed: 4656.20 steps/h    | ETA: 197.59 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 80000... Done.
+Step: 81000/1000000 (8.10%) | Elapsed: 15.65 h          | Speed: 4695.37 steps/h    | ETA: 195.72 h            
+Step: 82000/1000000 (8.20%) | Elapsed: 15.88 h          | Speed: 4483.73 steps/h    | ETA: 204.74 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 82000... Done.
+Step: 83000/1000000 (8.30%) | Elapsed: 16.09 h          | Speed: 4652.18 steps/h    | ETA: 197.11 h            
+Step: 84000/1000000 (8.40%) | Elapsed: 16.30 h          | Speed: 4682.52 steps/h    | ETA: 195.62 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 84000... Done.
+Step: 85000/1000000 (8.50%) | Elapsed: 16.52 h          | Speed: 4700.93 steps/h    | ETA: 194.64 h            
+Step: 86000/1000000 (8.60%) | Elapsed: 16.73 h          | Speed: 4762.90 steps/h    | ETA: 191.90 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 86000... Done.
+Step: 87000/1000000 (8.70%) | Elapsed: 16.94 h          | Speed: 4612.83 steps/h    | ETA: 197.93 h            
+Step: 88000/1000000 (8.80%) | Elapsed: 17.16 h          | Speed: 4566.57 steps/h    | ETA: 199.71 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 88000... Done.
+Step: 89000/1000000 (8.90%) | Elapsed: 17.38 h          | Speed: 4688.86 steps/h    | ETA: 194.29 h            
+Step: 90000/1000000 (9.00%) | Elapsed: 17.59 h          | Speed: 4575.43 steps/h    | ETA: 198.89 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 90000... Done.
+Step: 91000/1000000 (9.10%) | Elapsed: 17.80 h          | Speed: 4802.74 steps/h    | ETA: 189.27 h            
+Step: 92000/1000000 (9.20%) | Elapsed: 18.01 h          | Speed: 4791.57 steps/h    | ETA: 189.50 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 92000... Done.
+Step: 93000/1000000 (9.30%) | Elapsed: 18.23 h          | Speed: 4685.71 steps/h    | ETA: 193.57 h            
+Step: 94000/1000000 (9.40%) | Elapsed: 18.44 h          | Speed: 4667.91 steps/h    | ETA: 194.09 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 94000... Done.
+Step: 95000/1000000 (9.50%) | Elapsed: 18.65 h          | Speed: 4656.04 steps/h    | ETA: 194.37 h            
+Step: 96000/1000000 (9.60%) | Elapsed: 18.87 h          | Speed: 4725.82 steps/h    | ETA: 191.29 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 96000... Done.
+Step: 97000/1000000 (9.70%) | Elapsed: 19.07 h          | Speed: 4826.83 steps/h    | ETA: 187.08 h            
+Step: 98000/1000000 (9.80%) | Elapsed: 19.29 h          | Speed: 4713.76 steps/h    | ETA: 191.35 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 98000... Done.
+Step: 99000/1000000 (9.90%) | Elapsed: 19.50 h          | Speed: 4676.62 steps/h    | ETA: 192.66 h            
+Step: 100000/1000000 (10.00%) | Elapsed: 19.71 h          | Speed: 4747.75 steps/h    | ETA: 189.56 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 100000... Done.
+Step: 101000/1000000 (10.10%) | Elapsed: 19.92 h          | Speed: 4809.48 steps/h    | ETA: 186.92 h            
+Step: 102000/1000000 (10.20%) | Elapsed: 20.12 h          | Speed: 4853.92 steps/h    | ETA: 185.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 102000... Done.
+Step: 103000/1000000 (10.30%) | Elapsed: 20.34 h          | Speed: 4720.62 steps/h    | ETA: 190.02 h            
+Step: 104000/1000000 (10.40%) | Elapsed: 20.55 h          | Speed: 4690.94 steps/h    | ETA: 191.01 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 104000... Done.
+Step: 105000/1000000 (10.50%) | Elapsed: 20.76 h          | Speed: 4745.50 steps/h    | ETA: 188.60 h            
+Step: 106000/1000000 (10.60%) | Elapsed: 20.97 h          | Speed: 4750.54 steps/h    | ETA: 188.19 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 106000... Done.
+Step: 107000/1000000 (10.70%) | Elapsed: 21.18 h          | Speed: 4700.90 steps/h    | ETA: 189.96 h            
+Step: 108000/1000000 (10.80%) | Elapsed: 21.39 h          | Speed: 4748.90 steps/h    | ETA: 187.83 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 108000... Done.
+Step: 109000/1000000 (10.90%) | Elapsed: 21.61 h          | Speed: 4631.58 steps/h    | ETA: 192.38 h            
+Step: 110000/1000000 (11.00%) | Elapsed: 21.82 h          | Speed: 4700.13 steps/h    | ETA: 189.36 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 110000... Done.
+Step: 111000/1000000 (11.10%) | Elapsed: 22.03 h          | Speed: 4835.08 steps/h    | ETA: 183.86 h            
+Step: 112000/1000000 (11.20%) | Elapsed: 22.24 h          | Speed: 4793.18 steps/h    | ETA: 185.26 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 112000... Done.
+Step: 113000/1000000 (11.30%) | Elapsed: 22.45 h          | Speed: 4802.76 steps/h    | ETA: 184.69 h            
+Step: 114000/1000000 (11.40%) | Elapsed: 22.65 h          | Speed: 4824.56 steps/h    | ETA: 183.64 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 114000... Done.
+Step: 115000/1000000 (11.50%) | Elapsed: 22.87 h          | Speed: 4625.22 steps/h    | ETA: 191.34 h            
+Step: 116000/1000000 (11.60%) | Elapsed: 23.07 h          | Speed: 4871.32 steps/h    | ETA: 181.47 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 116000... Done.
+Step: 117000/1000000 (11.70%) | Elapsed: 23.29 h          | Speed: 4607.26 steps/h    | ETA: 191.65 h            
+Step: 118000/1000000 (11.80%) | Elapsed: 23.50 h          | Speed: 4821.79 steps/h    | ETA: 182.92 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 118000... Done.
+Step: 119000/1000000 (11.90%) | Elapsed: 23.71 h          | Speed: 4785.69 steps/h    | ETA: 184.09 h            
+Step: 120000/1000000 (12.00%) | Elapsed: 23.92 h          | Speed: 4700.54 steps/h    | ETA: 187.21 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 120000... Done.
+Step: 121000/1000000 (12.10%) | Elapsed: 24.13 h          | Speed: 4834.67 steps/h    | ETA: 181.81 h            
+Step: 122000/1000000 (12.20%) | Elapsed: 24.34 h          | Speed: 4781.36 steps/h    | ETA: 183.63 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 122000... Done.
+Step: 123000/1000000 (12.30%) | Elapsed: 24.55 h          | Speed: 4765.98 steps/h    | ETA: 184.01 h            
+Step: 124000/1000000 (12.40%) | Elapsed: 24.75 h          | Speed: 4885.96 steps/h    | ETA: 179.29 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 124000... Done.
+Step: 125000/1000000 (12.50%) | Elapsed: 24.97 h          | Speed: 4659.76 steps/h    | ETA: 187.78 h            
+Step: 126000/1000000 (12.60%) | Elapsed: 25.17 h          | Speed: 4842.64 steps/h    | ETA: 180.48 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 126000... Done.
+Step: 127000/1000000 (12.70%) | Elapsed: 25.38 h          | Speed: 4698.46 steps/h    | ETA: 185.81 h            
+Step: 128000/1000000 (12.80%) | Elapsed: 25.60 h          | Speed: 4680.80 steps/h    | ETA: 186.29 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 128000... Done.
+Step: 129000/1000000 (12.90%) | Elapsed: 25.81 h          | Speed: 4721.13 steps/h    | ETA: 184.49 h            
+Step: 130000/1000000 (13.00%) | Elapsed: 26.02 h          | Speed: 4717.54 steps/h    | ETA: 184.42 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 130000... Done.
+Step: 131000/1000000 (13.10%) | Elapsed: 26.23 h          | Speed: 4795.89 steps/h    | ETA: 181.20 h            
+Step: 132000/1000000 (13.20%) | Elapsed: 26.44 h          | Speed: 4691.79 steps/h    | ETA: 185.00 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 132000... Done.
+Step: 133000/1000000 (13.30%) | Elapsed: 26.65 h          | Speed: 4872.59 steps/h    | ETA: 177.93 h            
+Step: 134000/1000000 (13.40%) | Elapsed: 26.87 h          | Speed: 4565.28 steps/h    | ETA: 189.69 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 134000... Done.
+Step: 135000/1000000 (13.50%) | Elapsed: 27.08 h          | Speed: 4685.21 steps/h    | ETA: 184.62 h            
+Step: 136000/1000000 (13.60%) | Elapsed: 27.30 h          | Speed: 4637.30 steps/h    | ETA: 186.32 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 136000... Done.
+Step: 137000/1000000 (13.70%) | Elapsed: 27.50 h          | Speed: 4993.08 steps/h    | ETA: 172.84 h            
+Step: 138000/1000000 (13.80%) | Elapsed: 27.70 h          | Speed: 4833.59 steps/h    | ETA: 178.34 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 138000... Done.
+Step: 139000/1000000 (13.90%) | Elapsed: 27.92 h          | Speed: 4744.12 steps/h    | ETA: 181.49 h            
+Step: 140000/1000000 (14.00%) | Elapsed: 28.12 h          | Speed: 4842.60 steps/h    | ETA: 177.59 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 140000... Done.
+Step: 141000/1000000 (14.10%) | Elapsed: 28.32 h          | Speed: 4964.12 steps/h    | ETA: 173.04 h            
+Step: 142000/1000000 (14.20%) | Elapsed: 28.53 h          | Speed: 4815.71 steps/h    | ETA: 178.17 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 142000... Done.
+Step: 143000/1000000 (14.30%) | Elapsed: 28.74 h          | Speed: 4837.22 steps/h    | ETA: 177.17 h            
+Step: 144000/1000000 (14.40%) | Elapsed: 28.94 h          | Speed: 4881.19 steps/h    | ETA: 175.37 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 144000... Done.
+Step: 145000/1000000 (14.50%) | Elapsed: 29.15 h          | Speed: 4820.19 steps/h    | ETA: 177.38 h            
+Step: 146000/1000000 (14.60%) | Elapsed: 29.35 h          | Speed: 4887.64 steps/h    | ETA: 174.73 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 146000... Done.
+Step: 147000/1000000 (14.70%) | Elapsed: 29.55 h          | Speed: 5241.58 steps/h    | ETA: 162.74 h            
+Step: 148000/1000000 (14.80%) | Elapsed: 29.73 h          | Speed: 5368.58 steps/h    | ETA: 158.70 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 148000... Done.
+Step: 149000/1000000 (14.90%) | Elapsed: 29.92 h          | Speed: 5364.91 steps/h    | ETA: 158.62 h            
+Step: 150000/1000000 (15.00%) | Elapsed: 30.10 h          | Speed: 5406.45 steps/h    | ETA: 157.22 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 150000... Done.
+Step: 151000/1000000 (15.10%) | Elapsed: 30.29 h          | Speed: 5376.57 steps/h    | ETA: 157.91 h            
+Step: 152000/1000000 (15.20%) | Elapsed: 30.47 h          | Speed: 5378.02 steps/h    | ETA: 157.68 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 152000... Done.
+Step: 153000/1000000 (15.30%) | Elapsed: 30.66 h          | Speed: 5373.41 steps/h    | ETA: 157.63 h            
+Step: 154000/1000000 (15.40%) | Elapsed: 30.85 h          | Speed: 5306.47 steps/h    | ETA: 159.43 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 154000... Done.
+Step: 155000/1000000 (15.50%) | Elapsed: 31.04 h          | Speed: 5339.00 steps/h    | ETA: 158.27 h            
+Step: 156000/1000000 (15.60%) | Elapsed: 31.22 h          | Speed: 5377.34 steps/h    | ETA: 156.95 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 156000... Done.
+Step: 157000/1000000 (15.70%) | Elapsed: 31.41 h          | Speed: 5379.17 steps/h    | ETA: 156.72 h            
+Step: 158000/1000000 (15.80%) | Elapsed: 31.59 h          | Speed: 5360.74 steps/h    | ETA: 157.07 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 158000... Done.
+Step: 159000/1000000 (15.90%) | Elapsed: 31.78 h          | Speed: 5393.88 steps/h    | ETA: 155.92 h            
+Step: 160000/1000000 (16.00%) | Elapsed: 31.97 h          | Speed: 5360.84 steps/h    | ETA: 156.69 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 160000... Done.
+Step: 161000/1000000 (16.10%) | Elapsed: 32.15 h          | Speed: 5354.60 steps/h    | ETA: 156.69 h            
+Step: 162000/1000000 (16.20%) | Elapsed: 32.34 h          | Speed: 5416.14 steps/h    | ETA: 154.72 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 162000... Done.
+Step: 163000/1000000 (16.30%) | Elapsed: 32.52 h          | Speed: 5391.93 steps/h    | ETA: 155.23 h            
+Step: 164000/1000000 (16.40%) | Elapsed: 32.71 h          | Speed: 5331.10 steps/h    | ETA: 156.82 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 164000... Done.
+Step: 165000/1000000 (16.50%) | Elapsed: 32.90 h          | Speed: 5351.00 steps/h    | ETA: 156.05 h            
+Step: 166000/1000000 (16.60%) | Elapsed: 33.08 h          | Speed: 5356.17 steps/h    | ETA: 155.71 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 166000... Done.
+Step: 167000/1000000 (16.70%) | Elapsed: 33.27 h          | Speed: 5350.74 steps/h    | ETA: 155.68 h            
+Step: 168000/1000000 (16.80%) | Elapsed: 33.46 h          | Speed: 5337.83 steps/h    | ETA: 155.87 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 168000... Done.
+Step: 169000/1000000 (16.90%) | Elapsed: 33.65 h          | Speed: 5340.09 steps/h    | ETA: 155.62 h            
+Step: 170000/1000000 (17.00%) | Elapsed: 33.83 h          | Speed: 5341.85 steps/h    | ETA: 155.38 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 170000... Done.
+Step: 171000/1000000 (17.10%) | Elapsed: 34.02 h          | Speed: 5310.25 steps/h    | ETA: 156.11 h            
+Step: 172000/1000000 (17.20%) | Elapsed: 34.21 h          | Speed: 5292.43 steps/h    | ETA: 156.45 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 172000... Done.
+Step: 173000/1000000 (17.30%) | Elapsed: 34.40 h          | Speed: 5326.35 steps/h    | ETA: 155.27 h            
+Step: 174000/1000000 (17.40%) | Elapsed: 34.59 h          | Speed: 5340.13 steps/h    | ETA: 154.68 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 174000... Done.
+Step: 175000/1000000 (17.50%) | Elapsed: 34.77 h          | Speed: 5313.91 steps/h    | ETA: 155.25 h            
+Step: 176000/1000000 (17.60%) | Elapsed: 34.96 h          | Speed: 5291.20 steps/h    | ETA: 155.73 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 176000... Done.
+Step: 177000/1000000 (17.70%) | Elapsed: 35.15 h          | Speed: 5345.88 steps/h    | ETA: 153.95 h            
+Step: 178000/1000000 (17.80%) | Elapsed: 35.34 h          | Speed: 5305.07 steps/h    | ETA: 154.95 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 178000... Done.
+Step: 179000/1000000 (17.90%) | Elapsed: 35.53 h          | Speed: 5287.90 steps/h    | ETA: 155.26 h            
+Step: 180000/1000000 (18.00%) | Elapsed: 35.72 h          | Speed: 5326.15 steps/h    | ETA: 153.96 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 180000... Done.
+Step: 181000/1000000 (18.10%) | Elapsed: 35.90 h          | Speed: 5280.32 steps/h    | ETA: 155.10 h            
+Step: 182000/1000000 (18.20%) | Elapsed: 36.09 h          | Speed: 5321.45 steps/h    | ETA: 153.72 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 182000... Done.
+Step: 183000/1000000 (18.30%) | Elapsed: 36.28 h          | Speed: 5315.16 steps/h    | ETA: 153.71 h            
+Step: 184000/1000000 (18.40%) | Elapsed: 36.47 h          | Speed: 5346.04 steps/h    | ETA: 152.64 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 184000... Done.
+Step: 185000/1000000 (18.50%) | Elapsed: 36.65 h          | Speed: 5359.22 steps/h    | ETA: 152.07 h            
+Step: 186000/1000000 (18.60%) | Elapsed: 36.84 h          | Speed: 5345.49 steps/h    | ETA: 152.28 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 186000... Done.
+Step: 187000/1000000 (18.70%) | Elapsed: 37.03 h          | Speed: 5299.19 steps/h    | ETA: 153.42 h            
+Step: 188000/1000000 (18.80%) | Elapsed: 37.22 h          | Speed: 5325.75 steps/h    | ETA: 152.47 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 188000... Done.
+Step: 189000/1000000 (18.90%) | Elapsed: 37.41 h          | Speed: 5348.14 steps/h    | ETA: 151.64 h            
+Step: 190000/1000000 (19.00%) | Elapsed: 37.59 h          | Speed: 5356.67 steps/h    | ETA: 151.21 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 190000... Done.
+Step: 191000/1000000 (19.10%) | Elapsed: 37.78 h          | Speed: 5321.58 steps/h    | ETA: 152.02 h            
+Step: 192000/1000000 (19.20%) | Elapsed: 37.97 h          | Speed: 5324.82 steps/h    | ETA: 151.74 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 192000... Done.
+Step: 193000/1000000 (19.30%) | Elapsed: 38.15 h          | Speed: 5361.48 steps/h    | ETA: 150.52 h            
+Step: 194000/1000000 (19.40%) | Elapsed: 38.34 h          | Speed: 5312.35 steps/h    | ETA: 151.72 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 194000... Done.
+Step: 195000/1000000 (19.50%) | Elapsed: 38.53 h          | Speed: 5332.83 steps/h    | ETA: 150.95 h            
+Step: 196000/1000000 (19.60%) | Elapsed: 38.72 h          | Speed: 5315.82 steps/h    | ETA: 151.25 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 196000... Done.
+Step: 197000/1000000 (19.70%) | Elapsed: 38.91 h          | Speed: 5314.06 steps/h    | ETA: 151.11 h            
+Step: 198000/1000000 (19.80%) | Elapsed: 39.09 h          | Speed: 5359.24 steps/h    | ETA: 149.65 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 198000... Done.
+Step: 199000/1000000 (19.90%) | Elapsed: 39.28 h          | Speed: 5327.95 steps/h    | ETA: 150.34 h            
+Step: 200000/1000000 (20.00%) | Elapsed: 39.47 h          | Speed: 5331.79 steps/h    | ETA: 150.04 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 200000... Done.
+Step: 201000/1000000 (20.10%) | Elapsed: 39.65 h          | Speed: 5353.75 steps/h    | ETA: 149.24 h            
+Step: 202000/1000000 (20.20%) | Elapsed: 39.84 h          | Speed: 5325.85 steps/h    | ETA: 149.84 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 202000... Done.
+Step: 203000/1000000 (20.30%) | Elapsed: 40.03 h          | Speed: 5333.21 steps/h    | ETA: 149.44 h            
+Step: 204000/1000000 (20.40%) | Elapsed: 40.22 h          | Speed: 5298.76 steps/h    | ETA: 150.22 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 204000... Done.
+Step: 205000/1000000 (20.50%) | Elapsed: 40.41 h          | Speed: 5318.82 steps/h    | ETA: 149.47 h            
+Step: 206000/1000000 (20.60%) | Elapsed: 40.59 h          | Speed: 5314.15 steps/h    | ETA: 149.41 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 206000... Done.
+Step: 207000/1000000 (20.70%) | Elapsed: 40.78 h          | Speed: 5284.75 steps/h    | ETA: 150.05 h            
+Step: 208000/1000000 (20.80%) | Elapsed: 40.97 h          | Speed: 5330.05 steps/h    | ETA: 148.59 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 208000... Done.
+Step: 209000/1000000 (20.90%) | Elapsed: 41.16 h          | Speed: 5337.13 steps/h    | ETA: 148.21 h            
+Step: 210000/1000000 (21.00%) | Elapsed: 41.35 h          | Speed: 5348.93 steps/h    | ETA: 147.69 h            
+
+Performing DDP check...
+Checking if parameters are consistent across processes...
+Done.
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 210000... Done.
+Step: 211000/1000000 (21.10%) | Elapsed: 41.53 h          | Speed: 5346.93 steps/h    | ETA: 147.56 h            
+Step: 212000/1000000 (21.20%) | Elapsed: 41.72 h          | Speed: 5290.08 steps/h    | ETA: 148.96 h            
+
+Sampling 64 images... Done.
+
+Saving checkpoint at step 212000... Done.
+Step: 213000/1000000 (21.30%) | Elapsed: 41.91 h          | Speed: 5297.64 steps/h    | ETA: 148.56 h            

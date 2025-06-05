@@ -54,7 +54,7 @@ if __name__ == '__main__':
             metadata = metadata[metadata['aesthetic_score'] >= opt.filter_low_aesthetic_score]
         if 'rendered' not in metadata.columns:
             raise ValueError('metadata.csv does not have "rendered" column, please run "build_metadata.py" first')
-        metadata = metadata[metadata['rendered'] == True]
+        # metadata = metadata[metadata['rendered'] == True]
         if 'voxelized' in metadata.columns:
             metadata = metadata[metadata['voxelized'] == False]
     else:

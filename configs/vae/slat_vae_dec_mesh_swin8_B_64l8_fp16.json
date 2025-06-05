@@ -23,7 +23,7 @@
         "args": {
             "image_size": 512,
             "latent_model": "dinov2_vitl14_reg_slat_enc_swin8_B_64l8_fp16",
-            "min_aesthetic_score": 4.5,
+            "min_aesthetic_score": 0,
             "max_num_voxels": 32768
         }
     },

@@ -74,7 +74,11 @@ class TextConditionedMixin:
         self.captions = {}
         for instance in self.instances:
             sha256 = instance[1]
-            self.captions[sha256] = json.loads(self.metadata.loc[sha256]['captions'])
+            self.captions[sha256] = [self.metadata.loc[sha256]['captions'][2:-2]] # json.loads(self.metadata.loc[sha256]['captions'])
+            # print(self.captions[sha256])
+            # print(type(self.captions[sha256]))
+            # print(len(self.captions[sha256]))
+            # print("-----------------------------")
     
     def filter_metadata(self, metadata):
         metadata, stats = super().filter_metadata(metadata)
