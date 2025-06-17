@@ -400,5 +400,9 @@ FodyWeavers.xsd
 outputs/
 microsoft/
 openai/
+zer0int/
 datasets/
+infer/
 *.mp4
+*.glb
+*.ply

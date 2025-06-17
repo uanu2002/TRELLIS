@@ -14,10 +14,11 @@ class TextConditionedMixin:
     Args:
         text_cond_model: The text conditioning model.
     """
-    def __init__(self, *args, text_cond_model: str = './openai/clip-vit-large-patch14', **kwargs):
+    def __init__(self, *args, text_cond_model: str = 'openai/clip-vit-large-patch14', **kwargs): # zer0int/LongCLIP-L-Diffusers ./openai/clip-vit-large-patch14
         super().__init__(*args, **kwargs)
         self.text_cond_model_name = text_cond_model
         self.text_cond_model = None     # the model is init lazily
+        self.max_length = 248 if 'Long' in text_cond_model else 77
         
     def _init_text_cond_model(self):
         """
@@ -43,7 +44,7 @@ class TextConditionedMixin:
         assert isinstance(text, list) and isinstance(text[0], str), "TextConditionedMixin only supports list of strings as cond"
         if self.text_cond_model is None:
             self._init_text_cond_model()
-        encoding = self.text_cond_model['tokenizer'](text, max_length=77, padding='max_length', truncation=True, return_tensors='pt')
+        encoding = self.text_cond_model['tokenizer'](text, max_length=self.max_length, padding='max_length', truncation=True, return_tensors='pt')
         tokens = encoding['input_ids'].cuda()
         embeddings = self.text_cond_model['model'](input_ids=tokens).last_hidden_state
         
