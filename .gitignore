@@ -402,7 +402,11 @@ microsoft/
 openai/
 zer0int/
 datasets/
-infer/
+infer/*
+!infer/infer_all.py
+!infer/infer_text.py
+!infer/mesh2cad.py
+!infer/convert_safetensors.py
 *.mp4
 *.glb
 *.ply
