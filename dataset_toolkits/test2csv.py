@@ -6,8 +6,8 @@ import trimesh
 import numpy as np
 from datetime import datetime
 from typing import Any
-from json2prompt import json2prompt
 from tqdm import tqdm
+import os
 
 def compute_aesthetic_score(mesh: trimesh.Trimesh) -> float:
     return 100 # np.random.rand()
@@ -42,9 +42,12 @@ def process_folder(obj_dir: str,
         glb_path_rel = f"glb/{file_id}.glb"
         mesh.export(glb_path, file_type="glb")
 
+        if not os.path.exists(glb_path):
+            continue
         cap_file = captions_dir / f"{file_id}_params.json"
-
-        captions = [json2prompt(cap_file)]
+        if not os.path.exists(cap_file):
+            continue
+        captions = cap_file
 
         sha = sha256_of_file(glb_path)
 
@@ -52,7 +55,7 @@ def process_folder(obj_dir: str,
             "sha256": sha,
             "file_identifier": glb_path_rel,
             "local_path": f"raw/{glb_path_rel}",
-            "aesthetic_score": compute_aesthetic_score(mesh),
+            "aesthetic_score": 100,
             "captions": captions,
             "rendered": False,
             "voxelized": False,
@@ -70,8 +73,8 @@ def process_folder(obj_dir: str,
 
 if __name__ == "__main__":
     process_folder(
-        obj_dir="/fs-computility/ai-shen/wujianyu/f02/generate_vsp_dataset_discard/vsp_dataset/f02/mesh",
-        captions_dir="/fs-computility/ai-shen/wujianyu/f02/generate_vsp_dataset_discard/vsp_dataset/f02/json",
-        csv_out="/fs-computility/ai-shen/wujianyu/TRELLIS/datasets/f02/metadata.csv",
-        glb_dir="/fs-computility/ai-shen/wujianyu/f02/generate_vsp_dataset_discard/vsp_dataset/f02/glb",
+        obj_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/mesh",
+        captions_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/json",
+        csv_out="/fs-computility/ai-shen/wujianyu/TRELLIS/datasets/T8_v2/metadata.csv",
+        glb_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/glb",
     )

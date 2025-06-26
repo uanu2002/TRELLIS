@@ -68,12 +68,12 @@ if __name__ == '__main__':
                         help='Filter objects with aesthetic score lower than this value')
     parser.add_argument('--instances', type=str, default=None,
                         help='Instances to process')
-    parser.add_argument('--num_views', type=int, default=10,
+    parser.add_argument('--num_views', type=int, default=1,
                         help='Number of views to render')
     dataset_utils.add_args(parser)
     parser.add_argument('--rank', type=int, default=0)
     parser.add_argument('--world_size', type=int, default=1)
-    parser.add_argument('--max_workers', type=int, default=8)
+    parser.add_argument('--max_workers', type=int, default=20)
     opt = parser.parse_args(sys.argv[2:])
     opt = edict(vars(opt))
 
