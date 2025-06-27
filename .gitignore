@@ -410,3 +410,4 @@ infer/*
 *.mp4
 *.glb
 *.ply
+!trellis/datasets
