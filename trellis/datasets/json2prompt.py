@@ -237,12 +237,84 @@ def json_to_user_prompt_f02(json_file):
 
     return questions
 
+def json_to_user_prompt_general(json_file: str):
+    """Convert a JSON file to a user prompt string."""
+    with open(json_file, 'r') as f:
+        data = json.load(f)
+
+    model_index = data.get("AircraftName", -1)
+    fuselage = data.get("Fuselage", [{}])[0] # Get the first fuselage entry
+    main_wing = data.get("MainWing", [{}])[0] # Get the first main wing entry
+    vertical_tail = data.get("VerticalTail", [{}])[0] # Get the first vertical tail entry
+    horizontal_tail = data.get("HorizontalTail", [{}])[0] # Get the first horizontal tail entry
+
+    user_prompt_options_sets = {}
+
+    # if fuselage is not empty, add fuselage options
+    if fuselage:
+        user_prompt_options_sets["Fuselage"] = [
+            f"Fuselage Length = {fuselage['Length']:.2f} m",
+            f"Fuselage Max Width = {fuselage['MaxWidth']:.2f} m",
+            f"Fuselage Max Height = {fuselage['MaxHeight']:.2f} m",
+        ]
+    
+    if main_wing:
+        user_prompt_options_sets["MainWing"] = [
+            f"Main Wing Span = {main_wing['Span']:.2f} m",
+            f"Main Wing Area = {main_wing['Area']:.2f} m²",
+            f"Main Wing Root Chord = {main_wing['RootChord']:.2f} m",
+            f"Main Wing Tip Chord = {main_wing['TipChord']:.2f} m",
+            f"Main Wing Sweep = {main_wing['Sweep']:.2f} degrees",
+        ]
+
+    if vertical_tail:
+        user_prompt_options_sets["VerticalTail"] = [
+            f"Vertical Tail Span = {vertical_tail['Span']:.2f} m",
+            f"Vertical Tail Area = {vertical_tail['Area']:.2f} m²",
+            f"Vertical Tail Root Chord = {vertical_tail['RootChord']:.2f} m",
+            f"Vertical Tail Tip Chord = {vertical_tail['TipChord']:.2f} m",
+            f"Vertical Tail Sweep = {vertical_tail['Sweep']:.2f} degrees",
+        ]
+
+    if horizontal_tail:
+        user_prompt_options_sets["HorizontalTail"] = [
+            f"Horizontal Tail Span = {horizontal_tail['Span']:.2f} m",
+            f"Horizontal Tail Area = {horizontal_tail['Area']:.2f} m²",
+            f"Horizontal Tail Root Chord = {horizontal_tail['RootChord']:.2f} m",
+            f"Horizontal Tail Tip Chord = {horizontal_tail['TipChord']:.2f} m",
+            f"Horizontal Tail Sweep = {horizontal_tail['Sweep']:.2f} degrees",
+        ]
+
+
+    user_prompt = f"Generate a aircraft of template {model_index} that meets the following specifications:\n"
+
+    # Randomly select a subset of options for each component
+    questions = user_prompt
+    for component, options in user_prompt_options_sets.items():
+        selected_options = random_subset(options, subset_size=random.randint(1, len(options)))
+        
+        questions_for_component = ""
+        attribution_activated = False
+        questions_for_component += f"{component} specifications:\n"
+        for option in selected_options:
+            if random.choice([True, False]):
+                questions_for_component += f"- {option}\n"
+                attribution_activated = True
+            else:
+                pass
+        if attribution_activated:
+            questions += questions_for_component
+            questions += "\n"
+
+    return questions
+
 def json2prompt(json_file):
     json_path = str(json_file)
-    if 'f02' in json_path:
-        func = json_to_user_prompt_f02
-    elif 'T8' in json_path:
-        func = json_to_user_prompt_T8
+    # if 'f02' in json_path:
+    #     func = json_to_user_prompt_f02
+    # elif 'T8' in json_path:
+    #     func = json_to_user_prompt_T8
+    func = json_to_user_prompt_general
     return func(json_file)
 
 
@@ -252,12 +324,6 @@ if __name__ == "__main__":
     import pathlib
 
     # Define the directory containing the JSON files
-    json_dir = "/mnt/d/Dataset/airfoil3D/T8/json"
-    json_dir = pathlib.Path(json_dir)
+    json_path = ""
+    print(json2prompt(json_path))
 
-    # Iterate through all JSON files in the directory
-    for json_file in os.listdir(json_dir):
-        if json_file.endswith(".json") and json_file.startswith("T8_sample_"):
-            full_path = os.path.join(json_dir, json_file)
-            user_prompt = json_to_user_prompt(full_path)
-            print(f"User prompt for {json_file}:\n{user_prompt}\n")

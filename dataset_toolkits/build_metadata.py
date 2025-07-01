@@ -22,7 +22,7 @@ def need_process(key):
     return key in opt.field or opt.field == ['all']
 
 if __name__ == '__main__':
-    dataset_utils = importlib.import_module(f'datasets.{sys.argv[1]}')
+    dataset_utils = importlib.import_module(f'datasets.HSSD')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_dir', type=str, required=True,
@@ -33,7 +33,7 @@ if __name__ == '__main__':
                         help='Build metadata from file instead of from records of processings.' +
                              'Useful when some processing fail to generate records but file already exists.')
     dataset_utils.add_args(parser)
-    opt = parser.parse_args(sys.argv[2:])
+    opt = parser.parse_args(sys.argv[1:])
     opt = edict(vars(opt))
 
     os.makedirs(opt.output_dir, exist_ok=True)

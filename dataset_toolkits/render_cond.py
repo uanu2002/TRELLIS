@@ -63,7 +63,7 @@ def _render_cond(file_path, sha256, output_dir, num_views):
 
 
 if __name__ == '__main__':
-    dataset_utils = importlib.import_module(f'datasets.{sys.argv[1]}')
+    dataset_utils = importlib.import_module(f'datasets.HSSD')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--output_dir', type=str, required=True,
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser.add_argument('--rank', type=int, default=0)
     parser.add_argument('--world_size', type=int, default=1)
     parser.add_argument('--max_workers', type=int, default=8)
-    opt = parser.parse_args(sys.argv[2:])
+    opt = parser.parse_args(sys.argv[1:])
     opt = edict(vars(opt))
 
     os.makedirs(os.path.join(opt.output_dir, 'renders_cond'), exist_ok=True)

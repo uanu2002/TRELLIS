@@ -38,7 +38,7 @@ class TextConditionedMixin_old:
         }
         self.text_cond_model['null_cond'] = self.encode_text([''])
         
-    @torch.no_grad()
+    # @torch.no_grad()
     def encode_text(self, text: List[str]) -> torch.Tensor:
         """
         Encode the text.

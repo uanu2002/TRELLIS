@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime
 from typing import Any
 from tqdm import tqdm
+import argparse
 import os
 
 def compute_aesthetic_score(mesh: trimesh.Trimesh) -> float:
@@ -34,18 +35,24 @@ def process_folder(obj_dir: str,
     records = []
     for obj_path in tqdm(obj_dir.rglob("*.obj")):
         file_id = obj_path.stem
-        if 'sample' not in file_id:
+        # if 'sample' not in file_id:
+        #     continue
+        try:
+            mesh = trimesh.load(obj_path, force="mesh")
+        except Exception as e:
+            print(f"Load {obj_path} error: {e}!")
             continue
-        mesh = trimesh.load(obj_path, force="mesh")
 
         glb_path = glb_dir / f"{file_id}.glb"
         glb_path_rel = f"glb/{file_id}.glb"
         mesh.export(glb_path, file_type="glb")
 
         if not os.path.exists(glb_path):
+            print(f"glb does not exist!")
             continue
-        cap_file = captions_dir / f"{file_id}_params.json"
+        cap_file = captions_dir / f"{file_id}_info.json"
         if not os.path.exists(cap_file):
+            print(f"json does not exist!")
             continue
         captions = cap_file
 
@@ -54,7 +61,7 @@ def process_folder(obj_dir: str,
         records.append({
             "sha256": sha,
             "file_identifier": glb_path_rel,
-            "local_path": f"raw/{glb_path_rel}",
+            "local_path": f"{glb_path_rel}",
             "aesthetic_score": 100,
             "captions": captions,
             "rendered": False,
@@ -72,9 +79,12 @@ def process_folder(obj_dir: str,
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output_dir', type=str, required=True, help='Directory to save the metadata')
+    opt = parser.parse_args()
     process_folder(
-        obj_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/mesh",
-        captions_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/json",
-        csv_out="/fs-computility/ai-shen/wujianyu/TRELLIS/datasets/T8_v2/metadata.csv",
-        glb_dir="/fs-computility/ai-shen/wujianyu/wing_generation/T8_v2/glb",
+        obj_dir=f"{opt.output_dir}/mesh",
+        captions_dir=f"{opt.output_dir}/json",
+        csv_out=f"{opt.output_dir}/metadata.csv",
+        glb_dir=f"{opt.output_dir}/glb",
     )
