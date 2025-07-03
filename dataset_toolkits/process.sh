@@ -7,7 +7,12 @@ DATA_DIR="./datasets/dataset_v1"
 
 scripts=(
   # "dataset_toolkits/test2csv.py"
-  dataset_toolkits/render.py
+  # dataset_toolkits/render.py
+  # dataset_toolkits/voxelize.py
+  # dataset_toolkits/extract_feature.py
+  # dataset_toolkits/encode_ss_latent.py
+  # dataset_toolkits/encode_latent.py
+  # dataset_toolkits/build_metadata.py
 )
 
 for script in "${scripts[@]}"; do
